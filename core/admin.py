@@ -2,6 +2,7 @@ from django.contrib import admin
 from core.models import Endereco, Vaga, Carro, Pessoa, Administrador
 from core.models import Prestador, Cliente, PontoDeApoio, Reserva, Evento, EventoCarro
 
+
 admin.site.register(Endereco)
 admin.site.register(Vaga)
 admin.site.register(Carro)
