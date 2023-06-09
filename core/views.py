@@ -5,15 +5,19 @@ from core.models import Endereco, Vaga, Carro, Pessoa, Administrador
 from core.models import Prestador, Cliente, PontoDeApoio, Reserva, Evento, EventoCarro
 from django.contrib.auth.decorators import login_required
 from django.views import generic
+from users.forms import CustomUserCreationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 def home(request):
     contexto = {'home':'home'}
     return render(request, 'core\index.html', contexto)
 
 class Registrar(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     success_url = reverse_lazy('url_principal')
     template_name = 'registration/registrar.html'
 
@@ -39,19 +43,19 @@ def listagemEnderecos(request):
         return render(request, 'core/listagem_enderecos.html', contexto)
     return render(request, 'aviso.html')
 
-def alteraEndereco(request):
+def alteraEndereco(request, id):
     if request.user.is_staff: #verificar se usa
         obj = Endereco.objects.get(id=id)
         form = FormEndereco(request.POST or None, request.FILES or None, instance=obj)
         if request.POST:
             if form.is_valid():
                 form.save()
-                return redirect('url_listagem_endereco')
-        contexto = {'form': form, 'txt_titulo': 'EditEndereco', 'tct_descrição': "Altera Endereço"}
+                return redirect('url_listagem_enderecos')
+        contexto = {'form': form, 'txt_titulo': 'EditEndereco', 'txt_descrição': "Altera Endereço"}
         return render(request, 'core/cadastro.html', contexto)
     return render(request, 'aviso.html')
 
-def excluiEndereco(request, id):
+def excluiEndereco(request, id): #alterar para isActive = false
     obj = Endereco.objects.get(id=id)
     contexto = {'txt_info': obj.cep, 'txt_url': '/listagemEnderecos/'}
     if request.POST:
@@ -60,4 +64,5 @@ def excluiEndereco(request, id):
         return render(request, 'core/aviso_exclusao.html', contexto)
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
+
 

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ titulo_pagina }}
+{% endblock %}
+
+{% block main %}
+    <h3>Voce tem certeza que deseja excluir{{ txt_info }}</h3>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Sim, estou certo disso!</button>
+        <button type="button" onclick="window.location.href='{{txt_url}}'">Não</button>
+    </form>
+{% endblock %}

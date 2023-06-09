@@ -19,10 +19,23 @@ from django.urls import path, include
 from core.views import home
 from django.conf.urls.static import static
 from django.conf import settings
+from core.views import Registrar
+
+#CRUD Endereço
+from core.views import cadastroEndereco, listagemEnderecos, alteraEndereco, excluiEndereco
+
+#CRUD User
+from core.views import cadastroEndereco, listagemEnderecos, alteraEndereco, excluiEndereco
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/registrar/', Registrar.as_view(), name='url_registrar'),
     path('', home, name='url_principal'),
+    path('cadastroEndereco/', cadastroEndereco, name='url_cadastro_endereco'),
+    path('listagemEnderecos/', listagemEnderecos, name='url_listagem_enderecos'),
+    path('alteraEndereco/<int:id>/', alteraEndereco, name='url_altera_endereco'),
+    path('excluiEndereco/<int:id>/', excluiEndereco, name='url_exclui_endereco'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

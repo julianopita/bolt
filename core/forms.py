@@ -1,11 +1,13 @@
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import ModelForm
 from core.models import Endereco, Vaga, Carro, Pessoa, Administrador
 from core.models import Prestador, Cliente, PontoDeApoio, Reserva, Evento, EventoCarro
 
+User = get_user_model()
 
 class UserLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
