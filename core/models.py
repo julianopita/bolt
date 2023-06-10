@@ -31,7 +31,6 @@ class Vaga(models.Model):
     recarga = models.BooleanField(verbose_name="Possui recarga?")
     endereco = models.ForeignKey(Endereco, on_delete=models.DO_NOTHING, verbose_name='Endereço')
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
-    carga = models.BooleanField(default=True, verbose_name='Carregamento?')
 
     def delete(self):
         self.isActive = False

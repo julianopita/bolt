@@ -24,19 +24,39 @@ from core.views import Registrar
 from core.views import cadastroEndereco, listagemEnderecos, alteraEndereco, excluiEndereco
 
 #CRUD User
-from core.views import cadastroCliente, registroCliente
+from core.views import registroCliente
+
+#CRUD Vagas
+from core.views import cadastroVaga, listagemVagas, alteraVaga, excluiVaga
+
+#CRUD Pontos
+from core.views import cadastroPonto, listagemPontos, alteraPonto, excluiPonto
+
+#CRUD Carros
+from core.views import cadastroCarro, listagemCarros, alteraCarro, excluiCarro
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/registrar/', Registrar.as_view(), name='url_registrar'),
+    #path('accounts/registrar/', Registrar.as_view(), name='url_registrar'),
     path('', home, name='url_principal'),
-    #path('cadastroCliente/', cadastroCliente, name='url_cadastro_cliente'),
-    path('cadastroCliente/', registroCliente, name='url_registro_cliente'),
+    path('accounts/registrar/', registroCliente, name='url_registrar'),
     path('cadastroEndereco/', cadastroEndereco, name='url_cadastro_endereco'),
     path('listagemEnderecos/', listagemEnderecos, name='url_listagem_enderecos'),
     path('alteraEndereco/<int:id>/', alteraEndereco, name='url_altera_endereco'),
     path('excluiEndereco/<int:id>/', excluiEndereco, name='url_exclui_endereco'),
+    path('cadastroVaga/', cadastroVaga, name='url_cadastro_vaga'),
+    path('listagemVagas/', listagemVagas, name='url_listagem_vagas'),
+    path('alteraVaga/<int:id>/', alteraVaga, name='url_altera_vaga'),
+    path('excluiVaga/<int:id>/', excluiVaga, name='url_exclui_vaga'),
+    path('cadastroPonto/', cadastroPonto, name='url_cadastro_ponto'),
+    path('listagemPontos/', listagemPontos, name='url_listagem_pontos'),
+    path('alteraPonto/<int:id>/', alteraPonto, name='url_altera_ponto'),
+    path('excluiPonto/<int:id>/', excluiPonto, name='url_exclui_ponto'),
+    path('cadastroCarro/', cadastroCarro, name='url_cadastro_Carro'),
+    path('listagemCarros/', listagemCarros, name='url_listagem_Carros'),
+    path('alteraCarro/<int:id>/', alteraCarro, name='url_altera_Carro'),
+    path('excluiCarro/<int:id>/', excluiCarro, name='url_exclui_Carro'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Lis_vag
+{% endblock %}
+
+{% block main %}
+
+<ul class="list-group">
+    {% for i in dados %}
+    <li class="list-group-item">
+        {% if i.isActive == True %}
+            id: {{ i.id }} <br>
+            Endereço: {{ i.endereco.rua }}, {{ i.endereco.numero }} <br>
+            Ocupado: {{ i.ocupado }}<br>
+            Recarga: {{ i.recarga }} <br>
+            <br>
+            <a href="{% url 'url_altera_vaga' i.id %}">Editar</a>
+            <a href="{% url 'url_exclui_vaga' i.id %}">Excluir</a>
+        {% endif %}
+    {% empty %}
+        Não há vagas a exibir.
+        </li>
+    {% endfor %}
+</ul>
+
+<button onclick="window.location.href='/'">Home</button>
+
+{% endblock %}

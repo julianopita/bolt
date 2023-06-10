@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Lis_pto
+{% endblock %}
+
+{% block main %}
+
+<ul class="list-group">
+    {% for i in dados %}
+    <li class="list-group-item">
+        {% if i.isActive == True %}
+        <h4>Ponto id: {{ i.id }} </h4>
+            Nome: {{ i.nome }} <br>
+            Endereço: {{ i.endereco.rua }}, {{ i.endereco.numero }} <br>
+            Terceirizado? {{ i.terceirizado }} <br>
+            <br>
+            <h4>Vagas no ponto</h4>
+
+            {% for v in dados_compl %}
+                {% if i.endereco.id == v.endereco.id %}
+            <strong>Vaga id: {{ v.id }} </strong><br>
+                    Ocupado: {{ v.ocupado }}<br>
+                    Recarga: {{ v.recarga }} <br>
+                {% endif %}
+            {% empty %}
+                Não há vagas no ponto de apoio.
+            {% endfor %}
+            <br>
+            <a href="{% url 'url_altera_ponto' i.id %}">Editar</a>
+            <a href="{% url 'url_exclui_ponto' i.id %}">Excluir</a>
+        {% endif %}
+    {% empty %}
+        Não há pontos a exibir.
+        </li>
+    {% endfor %}
+</ul>
+
+<button onclick="window.location.href='/'">Home</button>
+
+{% endblock %}
