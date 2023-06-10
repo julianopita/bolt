@@ -3,12 +3,17 @@ from django.forms import ModelForm
 
 from .models import CustomUser
 
+class CustomUserCreationForm(ModelForm):
 
-class CustomUserCreationForm(UserCreationForm):
+     class Meta:
+         model = CustomUser
+         fields = ('email', 'password')
 
-    class Meta:
-        model = CustomUser
-        fields = ("email",)
+# class CustomUserCreationForm(UserCreationForm):
+#
+#     class Meta:
+#         model = CustomUser
+#         fields = ("email",)
 
 
 class CustomUserChangeForm(UserChangeForm):

@@ -8,8 +8,8 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        {{ endereco_form }}
-        {{ cliente_form }}
+        {{ endereco_form.as_p }}
+        {{ cliente_form.as_p }}
         <button type="submit">Registrar</button>
     </form>
 {% endblock %}

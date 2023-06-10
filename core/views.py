@@ -30,16 +30,16 @@ class Registrar(generic.CreateView):
         success_url = reverse_lazy('url_registro_cliente', kwargs={'id': self.object.pk})
         return success_url
 
-    def post(self, request, *args, **kwargs):
-        form=CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
-            user_group=Group.objects.get(name='Clientes')
-            user.groups.add(user_group)
-            return redirect(#success_url?)
-        else:
-            return render(request, self.template_name, {'form':form})
+    # def post(self, request, *args, **kwargs):
+    #     form=CustomUserCreationForm(request.POST)
+    #     if form.is_valid():
+    #         user = form.save(commit=False)
+    #         user.save()
+    #         user_group=Group.objects.get(name='Clientes')
+    #         user.groups.add(user_group)
+    #         return redirect(#success_url?)
+    #     else:
+    #         return render(request, self.template_name, {'form':form})
 
 
 
@@ -102,21 +102,22 @@ def cadastroCliente(request):
     return render(request, 'registration/registrar.html', contexto)
 
 
-def registroCliente(request, id):
-    #como receber o id? Como incorporar o user registration?
+def registroCliente(request):
     #ReCaptchaField(widget=ReCaptchaV2Checkbox())
-    #user_form = Registrar.as_view()
-    endereco_form = FormEndereco(request.POST or None, request.FILES or None)
+    user_form = CustomUserCreationForm(request.POST)
+    endereco_form = FormEndereco(request.POST)
     cliente_form = FormCliente(request.POST or None, request.FILES or None)
-    if all([endereco_form.is_valid() and cliente_form.is_valid()]):
-        #usr = user_form
+    if all([user_form.is_valid() and endereco_form.is_valid() and cliente_form.is_valid()]):
+        usr = user_form.save(commit=False)
         end = endereco_form.save()
         cli = cliente_form.save(commit=False)
         cli.intaker=request.user
-        cli.user_id = id
-        #cli.user = usr
+        cli.user= usr
         cli.endereco = end
+        user_form.save()
         cliente_form.save()
+        user_group = Group.objects.get(name='Clientes')
+        usr.groups.add(user_group)
         return redirect('url_principal')
-    contexto = {'endereco_form': endereco_form, 'cliente_form': cliente_form, 'txt_titulo': 'Cadastro Cliente', 'txt_descricao': 'Cadastro do Cliente'}
-    return render(request, 'registration/registrar.html', contexto)
+    contexto = {'user_form' : user_form, 'endereco_form': endereco_form, 'cliente_form': cliente_form, 'txt_titulo': 'Cadastro Cliente', 'txt_descricao': 'Cadastro do Cliente'}
+    return render(request, 'core\cadastro.html', contexto)
