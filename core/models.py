@@ -6,7 +6,7 @@ from django.views import generic
 User = get_user_model()
 
 
-#Estende a classe base de usuário
+# Estende a classe base de usuário
 class User(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='usuarioPadrao')
 
@@ -27,7 +27,8 @@ class Endereco(models.Model):
 
 
 class Vaga(models.Model):
-    ocupado = models.BooleanField(verbose_name="Ocupado?")
+    nome = models.CharField(default='Vaga', max_length=20, verbose_name='Placa')
+    ocupado = models.BooleanField(default=False, verbose_name="Ocupado?")
     recarga = models.BooleanField(verbose_name="Possui recarga?")
     endereco = models.ForeignKey(Endereco, on_delete=models.DO_NOTHING, verbose_name='Endereço')
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
@@ -41,7 +42,7 @@ class Vaga(models.Model):
         self.save()
 
     def __str__(self):
-        return self._check_id_field()
+        return f"{self.nome} - {self.id}"
 
     class Meta:
         verbose_name_plural = "Vagas"
@@ -49,23 +50,27 @@ class Vaga(models.Model):
 
 # Classe dos carros
 class Carro(models.Model):
-    placa = models.CharField(max_length=7, verbose_name='Placa')
+    placa = models.CharField(max_length=20, verbose_name='Placa')
     marca = models.CharField(max_length=20, verbose_name='Marca')
     modelo = models.CharField(max_length=20, verbose_name='Modelo')
     cor = models.CharField(max_length=20, verbose_name='Cor')
+    locacao = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=0.00, verbose_name='Valor')
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
-    vaga = models.ForeignKey(Vaga, on_delete=models.DO_NOTHING, verbose_name='Vaga')
+    disponivel = models.BooleanField(default=True, blank=True, null=True, verbose_name='Disponível?')
+    vaga = models.ForeignKey(Vaga, default=None, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name='Vaga')
 
     def delete(self):
-        self.isActive = False
-        self.save()
+       self.isActive = False
+       self.vaga = None
+       self.disponivel = False
+       self.save()
 
     def undelete(self):
-        self.isActive = True
-        self.save()
+       self.isActive = True
+       self.save()
 
     def __str__(self):
-        return self.placa
+        return str(self.pk)
 
     class Meta:
         verbose_name_plural = 'Carros'
@@ -131,10 +136,8 @@ class Cliente(Pessoa):
     dataNascimento = models.DateField(verbose_name='Data de Nascimento')
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
 
-
     def __str__(self):
         return self.nome
-
 
     def delete(self):
         self.isActive = False
@@ -163,7 +166,6 @@ class PontoDeApoio(models.Model):
     def __str__(self):
         return self.nome
 
-
     def delete(self):
         self.isActive = False
         self.save()
@@ -178,15 +180,15 @@ class PontoDeApoio(models.Model):
 
 class Reserva(models.Model):
     dataInicio = models.DateTimeField(verbose_name='Data de início')
-    dataFim = models.DateTimeField(verbose_name='Data de fim')
-    valor = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Valor')
-    tempoReserva = models.TimeField(verbose_name='Tempo de reserva')
+    dataFim = models.DateTimeField(verbose_name='Data de fim', blank=True, null=True, default=None)
+    valor = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=0.00, verbose_name='Valor')
+    tempoReserva = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=0.00, verbose_name='Tempo de reserva')
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
-    user = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, verbose_name='User')
+    cliente = models.ForeignKey(Cliente, on_delete=models.DO_NOTHING, verbose_name='Cliente')
+    carro = models.ForeignKey(Carro, default=None, null=True, on_delete=models.DO_NOTHING, verbose_name='Carro')
 
     def __str__(self):
         return f"{self.dataInicio} - {self.dataFim} - {self.valor}"
-
 
     def delete(self):
         self.isActive = False
@@ -199,8 +201,9 @@ class Reserva(models.Model):
     class Meta:
         verbose_name_plural = "Reservas"
 
+
 # Classes de eventos
-class Evento (models.Model):
+class Evento(models.Model):
     nome = models.CharField(max_length=100, verbose_name='Nome do evento')
     tipo = models.CharField(max_length=50, verbose_name='Tipo')
     criticidade = models.CharField(max_length=50, verbose_name='Criticidade')
@@ -211,14 +214,14 @@ class Evento (models.Model):
     class Meta:
         verbose_name_plural = "Eventos"
 
-class EventoCarro (models.Model):
+
+class EventoCarro(models.Model):
     carro = models.ForeignKey(Carro, on_delete=models.DO_NOTHING, verbose_name='Carro')
     evento = models.ForeignKey(Evento, on_delete=models.DO_NOTHING, verbose_name='Evento')
     dataInicio = models.DateTimeField(verbose_name='Data de início')
     dataFim = models.DateTimeField(verbose_name='Data de fim')
     resolvido = models.BooleanField(verbose_name="Resolvido?")
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
-
 
     def delete(self):
         self.isActive = False

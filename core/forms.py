@@ -1,4 +1,3 @@
-
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
@@ -7,6 +6,7 @@ from core.models import Endereco, Vaga, Carro, Pessoa, Administrador
 from core.models import Prestador, Cliente, PontoDeApoio, Reserva, Evento, EventoCarro
 
 User = get_user_model()
+
 
 class UserLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -20,59 +20,43 @@ class UserLoginForm(AuthenticationForm):
         attrs={'class': 'form-control', 'placeholder': 'Senha'}))
 
 
-
-
-
 class FormEndereco(ModelForm):
-
     class Meta:
         model = Endereco
         fields = '__all__'
 
 
 class FormVaga(ModelForm):
-
-
     class Meta:
         model = Vaga
-        fields = '__all__'
+        fields = ('endereco', 'recarga')
 
 
 class FormCarro(ModelForm):
-
-
     class Meta:
         model = Carro
-        fields = '__all__'
+        fields = ('placa', 'marca', 'modelo', 'cor', 'disponivel', 'vaga')
 
 
 class FormPessoa(ModelForm):
-
-
     class Meta:
         model = Pessoa
-        fields = ['user','nome', 'identificacao', 'telefone']
+        fields = ['user', 'nome', 'identificacao', 'telefone']
 
 
 class FormAdministrador(ModelForm):
-
-
     class Meta:
         model = Administrador
         fields = '__all__'
 
 
 class FormPrestador(ModelForm):
-
-
     class Meta:
         model = Prestador
         fields = '__all__'
 
 
 class FormCliente(ModelForm):
-
-
     class Meta:
         model = Cliente
         exclude = ('endereco', 'user', 'isActive')
@@ -80,32 +64,24 @@ class FormCliente(ModelForm):
 
 
 class FormPontoDeApoio(ModelForm):
-
-
     class Meta:
         model = PontoDeApoio
-        fields = '__all__'
+        fields = ('nome', 'endereco', 'terceirizado')
 
 
 class FormReserva(ModelForm):
-
-
     class Meta:
         model = Reserva
-        fields = '__all__'
+        fields = ('dataInicio', 'dataFim', 'carro')
 
 
 class FormEvento(ModelForm):
-
-
     class Meta:
         model = Evento
         fields = '__all__'
 
 
 class FormEventoCarro(ModelForm):
-
-
     class Meta:
         model = EventoCarro
         fields = '__all__'

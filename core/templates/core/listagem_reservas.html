@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Lis_res
+{% endblock %}
+
+{% block main %}
+
+<ul class="list-group">
+    {% for i in dados %}
+    <li class="list-group-item">
+        {% if i.isActive == True %}
+        <h4>Carro id: {{ i.id }} </h4>
+            Placa: {{ i.placa }} <br>
+            Marca: {{ i.marca }} <br>
+            Modelo: {{ i.modelo }} <br>
+            Cor: {{ i.cor }} <br>
+            Disponível? {{ i.disponivel }}
+            <br>
+
+            {% if i.vaga.id != None %}
+                O carro está atualmente parado em uma vaga.<br>
+                Vaga id: {{ i.vaga.id }} <br>
+                Endereço: {{ i.vaga.endereco.rua }}, {{ i.vaga.endereco.numero }}, {{ i.vaga.endereco.bairro }}, {{ i.vaga.endereco.cep }}<br>
+                Recarga: {{ i.vaga.recarga }} <br>
+            {% else %}
+                O carro não está em nenhuma vaga.<br>
+            {% endif %}
+            <a href="{% url 'url_altera_carro' i.id %}">Editar</a>
+            <a href="{% url 'url_exclui_carro' i.id %}">Excluir</a>
+            <br>
+        {% endif %}
+    {% empty %}
+        Não há carros a exibir.
+        </li>
+    {% endfor %}
+</ul>
+
+<button onclick="window.location.href='/'">Home</button>
+
+{% endblock %}

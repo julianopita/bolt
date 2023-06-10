@@ -1,9 +1,12 @@
+import decimal
+
 from django.shortcuts import render, redirect
+
 from core.forms import FormEndereco, FormVaga, FormCarro, FormPessoa, FormAdministrador
 from core.forms import FormPrestador, FormCliente, FormPontoDeApoio, FormReserva, FormEvento, FormEventoCarro
 from core.models import Endereco, Vaga, Carro, Pessoa, Administrador
 from core.models import Prestador, Cliente, PontoDeApoio, Reserva, Evento, EventoCarro
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
 from django.views import generic
@@ -12,8 +15,14 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.contrib import messages
+from datetime import timedelta
 
 User = get_user_model()
+
+
+def checkGroupAdmin(user):
+    return user.groups.filter(name='Administradores').exists()
 
 
 def home(request):
@@ -24,7 +33,6 @@ def home(request):
 class Registrar(generic.CreateView):
     form_class = CustomUserCreationForm
     template_name = 'registration/registrar.html'
-
 
     def get_success_url(self):
         success_url = reverse_lazy('url_registro_cliente', kwargs={'id': self.object.pk})
@@ -42,7 +50,6 @@ class Registrar(generic.CreateView):
     #         return render(request, self.template_name, {'form':form})
 
 
-
 # CRUD Endereço
 
 def cadastroEndereco(request):
@@ -53,7 +60,6 @@ def cadastroEndereco(request):
         return redirect('url_principal')
     contexto = {'form': form, 'txt_titulo': 'Cadastro Endereço', 'txt_descricao': 'Cadastro de Endereço'}
     return render(request, 'core\cadastro.html', contexto)
-
 
 
 def listagemEnderecos(request):
@@ -90,7 +96,8 @@ def excluiEndereco(request, id):  # alterar para isActive = false
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
 
-#CRUD Pessoa
+
+# CRUD Pessoa
 
 def cadastroCliente(request):
     # verificar o if user is client etc.
@@ -103,7 +110,7 @@ def cadastroCliente(request):
 
 
 def registroCliente(request):
-    #ReCaptchaField(widget=ReCaptchaV2Checkbox())
+    # ReCaptchaField(widget=ReCaptchaV2Checkbox())
     user_form = CustomUserCreationForm(request.POST)
     endereco_form = FormEndereco(request.POST)
     cliente_form = FormCliente(request.POST or None, request.FILES or None)
@@ -111,23 +118,25 @@ def registroCliente(request):
         usr = user_form.save(commit=False)
         end = endereco_form.save()
         cli = cliente_form.save(commit=False)
-        cli.intaker=request.user
-        cli.user= usr
+        cli.intaker = request.user
+        cli.user = usr
         cli.endereco = end
         user_form.save()
         cliente_form.save()
         user_group = Group.objects.get(name='Clientes')
         usr.groups.add(user_group)
         return redirect('url_principal')
-    contexto = {'user_form' : user_form, 'endereco_form': endereco_form, 'cliente_form': cliente_form, 'txt_titulo': 'Cadastro Cliente', 'txt_descricao': 'Cadastro do Cliente'}
+    contexto = {'user_form': user_form, 'endereco_form': endereco_form, 'cliente_form': cliente_form,
+                'txt_titulo': 'Cadastro Cliente', 'txt_descricao': 'Cadastro do Cliente'}
     return render(request, 'registration/registrar.html', contexto)
 
-#criar alterar e deletar
 
-#CRUD Vagas
+# criar alterar e deletar
+
+# CRUD Vagas
 
 def cadastroVaga(request):
-    #verificar if usergroup is administrador
+    # verificar if usergroup is administrador
     form = FormVaga(request.POST)
     if form.is_valid():
         form.save()
@@ -135,15 +144,18 @@ def cadastroVaga(request):
     contexto = {'form': form, 'txt_titulo': 'Cadastro Vaga', 'txt_descricao': 'Cadastro de Vaga'}
     return render(request, 'core\cadastro.html', contexto)
 
+
 def listagemVagas(request):
-    #if request.user.is_staff:
-        if request.POST and request.POST['input_pesquisa']:
-            dados = Vaga.objects.filter(endereco__cep__icontains=request.POST['input_pesquisa'])
-        else:
-            dados = Vaga.objects.all()
-        contexto = {'dados': dados, 'text_input': 'Digite o CEP', 'listagem': 'listagem'}
-        return render(request, 'core/listagem_vagas.html', contexto)
-    #return render(request, 'aviso.html')
+    # if request.user.is_staff:
+    if request.POST and request.POST['input_pesquisa']:
+        dados = Vaga.objects.filter(endereco__cep__icontains=request.POST['input_pesquisa'])
+    else:
+        dados = Vaga.objects.all()
+    contexto = {'dados': dados, 'text_input': 'Digite o CEP', 'listagem': 'listagem'}
+    return render(request, 'core/listagem_vagas.html', contexto)
+
+
+# return render(request, 'aviso.html')
 
 def alteraVaga(request, id):
     if request.user.is_staff:  # verificar se usa
@@ -157,6 +169,7 @@ def alteraVaga(request, id):
         return render(request, 'core/cadastro.html', contexto)
     return render(request, 'aviso.html')
 
+
 def excluiVaga(request, id):
     obj = Vaga.objects.get(id=id)
     contexto = {'txt_info': obj.endereco.rua, 'txt_url': '/listagemVagas/'}
@@ -167,10 +180,11 @@ def excluiVaga(request, id):
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
 
-#CRUD PontoDeApoio
+
+# CRUD PontoDeApoio
 
 def cadastroPonto(request):
-    #verificar if usergroup is administrador
+    # verificar if usergroup is administrador
     form = FormPontoDeApoio(request.POST)
     if form.is_valid():
         form.save()
@@ -178,16 +192,19 @@ def cadastroPonto(request):
     contexto = {'form': form, 'txt_titulo': 'Cadastro Pontos de Apoio', 'txt_descricao': 'Cadastro de Pontos de Apoio'}
     return render(request, 'core\cadastro.html', contexto)
 
+
 def listagemPontos(request):
     # if request.user.is_staff:
-        if request.POST and request.POST['input_pesquisa']:
-            dados = PontoDeApoio.objects.filter(endereco__cep__icontains=request.POST['input_pesquisa'])
-        else:
-            dados = PontoDeApoio.objects.all()
-            dados_compl = Vaga.objects.all()
-        contexto = {'dados': dados, 'dados_compl': dados_compl, 'text_input': 'Digite o CEP', 'listagem': 'listagem'}
-        return render(request, 'core/listagem_pontos.html', contexto)
-    # return render(request, 'aviso.html')
+    if request.POST and request.POST['input_pesquisa']:
+        dados = PontoDeApoio.objects.filter(endereco__cep__icontains=request.POST['input_pesquisa'])
+    else:
+        dados = PontoDeApoio.objects.all()
+        dados_compl = Vaga.objects.all()
+    contexto = {'dados': dados, 'dados_compl': dados_compl, 'text_input': 'Digite o CEP', 'listagem': 'listagem'}
+    return render(request, 'core/listagem_pontos.html', contexto)
+
+
+# return render(request, 'aviso.html')
 
 def alteraPonto(request, id):
     if request.user.is_staff:  # verificar se usa
@@ -201,6 +218,7 @@ def alteraPonto(request, id):
         return render(request, 'core/cadastro.html', contexto)
     return render(request, 'aviso.html')
 
+
 def excluiPonto(request, id):
     obj = PontoDeApoio.objects.get(id=id)
     contexto = {'txt_info': obj.endereco.rua, 'txt_url': '/listagemPontos/'}
@@ -211,10 +229,11 @@ def excluiPonto(request, id):
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
 
-#CRUD Carro
 
+# CRUD Carro
+@login_required
+@user_passes_test(checkGroupAdmin)
 def cadastroCarro(request):
-    #verificar if usergroup is administrador
     form = FormCarro(request.POST)
     if form.is_valid():
         form.save()
@@ -222,11 +241,97 @@ def cadastroCarro(request):
     contexto = {'form': form, 'txt_titulo': 'Cadastro Carro', 'txt_descricao': 'Cadastro de Carros'}
     return render(request, 'core\cadastro.html', contexto)
 
+
+@login_required
+@user_passes_test(checkGroupAdmin)
 def listagemCarros(request):
-    pass
+    if request.POST and request.POST['input_pesquisa']:
+        dados = Carro.objects.filter(placa__icontains=request.POST['input_pesquisa'])
+    else:
+        dados = Carro.objects.all()
+    contexto = {'dados': dados, 'text_input': 'Digite a placa', 'listagem': 'listagem'}
+    return render(request, 'core/listagem_carros.html', contexto)
 
+
+# return render(request, 'aviso.html')
+
+@login_required
+@user_passes_test(checkGroupAdmin)
 def alteraCarro(request, id):
-    pass
+    obj = Carro.objects.get(id=id)
+    form = FormCarro(request.POST or None, request.FILES or None, instance=obj)
+    if request.POST:
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Dados do carro alterados com sucesso!')
+            return redirect('url_listagem_carros')
+    contexto = {'form': form, 'txt_titulo': 'EditCarro', 'txt_descrição': "Altera Carros"}
+    return render(request, 'core/cadastro.html', contexto)
 
+
+@login_required
+@user_passes_test(checkGroupAdmin)
 def excluiCarro(request, id):
-    pass
+    obj = Carro.objects.get(id=id)
+    contexto = {'txt_info': obj.placa, 'txt_url': '/listagemCarros/'}
+    if request.POST:
+        obj.delete()
+        contexto.update({'txt_tipo': 'listagemCarros'})
+        return render(request, 'core/aviso_exclusao.html', contexto)
+    else:
+        return render(request, 'core/confirma_exclusao.html', contexto)
+
+# CRUD Reserva
+@login_required
+def cadastroReserva(request):
+    form = FormReserva(request.POST)
+    if form.is_valid():
+        rsr = form.save(commit=False)
+        if rsr.dataFim:
+            timediff = rsr.dataFim - rsr.dataInicio
+            timehours = (((timediff.total_seconds()/60)/60)/24)
+            rsr.tempoReserva = timehours
+            rsr.valor = rsr.carro.locacao * decimal.Decimal(timehours)
+        rsr.cliente = Cliente.objects.get(id = request.user.id)
+        form.save()
+        return redirect('url_principal')
+    contexto = {'form': form,
+                'txt_titulo': 'Cadastro Reserva', 'txt_descricao': 'Cadastro da Reserva'}
+    return render(request, 'core/cadastro.html', contexto)
+
+
+@login_required
+def listagemReservas(request):
+    if request.POST and request.POST['input_pesquisa']:
+        dados = Reserva.objects.filter(user__nome__icontains=request.POST['input_pesquisa'])
+    else:
+        dados = Reserva.objects.all()
+    contexto = {'dados': dados, 'text_input': 'Digite o nome do usuário', 'listagem': 'listagem'}
+    return render(request, 'core/listagem_reserva.html', contexto)
+
+
+# return render(request, 'aviso.html')
+
+@login_required
+def alteraReserva(request, id):
+    obj = Carro.objects.get(id=id)
+    form = FormCarro(request.POST or None, request.FILES or None, instance=obj)
+    if request.POST:
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Dados do carro alterados com sucesso!')
+            return redirect('url_listagem_carros')
+    contexto = {'form': form, 'txt_titulo': 'EditCarro', 'txt_descrição': "Altera Carros"}
+    return render(request, 'core/cadastro.html', contexto)
+
+
+@login_required
+def excluiReserva(request, id):
+    obj = Carro.objects.get(id=id)
+    contexto = {'txt_info': obj.placa, 'txt_url': '/listagemCarros/'}
+    if request.POST:
+        obj.delete()
+        contexto.update({'txt_tipo': 'listagemCarros'})
+        return render(request, 'core/aviso_exclusao.html', contexto)
+    else:
+        return render(request, 'core/confirma_exclusao.html', contexto)
