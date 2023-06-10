@@ -1,5 +1,4 @@
-from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptchaV2Checkbox
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
@@ -20,12 +19,11 @@ class UserLoginForm(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Senha'}))
 
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+
 
 
 
 class FormEndereco(ModelForm):
-    captcha = ReCaptchaField()
 
     class Meta:
         model = Endereco
@@ -33,7 +31,7 @@ class FormEndereco(ModelForm):
 
 
 class FormVaga(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = Vaga
@@ -41,7 +39,7 @@ class FormVaga(ModelForm):
 
 
 class FormCarro(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = Carro
@@ -49,15 +47,15 @@ class FormCarro(ModelForm):
 
 
 class FormPessoa(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = Pessoa
-        fields = '__all__'
+        fields = ['user','nome', 'identificacao', 'telefone']
 
 
 class FormAdministrador(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = Administrador
@@ -65,7 +63,7 @@ class FormAdministrador(ModelForm):
 
 
 class FormPrestador(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = Prestador
@@ -73,15 +71,16 @@ class FormPrestador(ModelForm):
 
 
 class FormCliente(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = Cliente
+        exclude = ('endereco', 'user', 'isActive')
         fields = '__all__'
 
 
 class FormPontoDeApoio(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = PontoDeApoio
@@ -89,7 +88,7 @@ class FormPontoDeApoio(ModelForm):
 
 
 class FormReserva(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = Reserva
@@ -97,7 +96,7 @@ class FormReserva(ModelForm):
 
 
 class FormEvento(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = Evento
@@ -105,7 +104,7 @@ class FormEvento(ModelForm):
 
 
 class FormEventoCarro(ModelForm):
-    captcha = ReCaptchaField()
+
 
     class Meta:
         model = EventoCarro

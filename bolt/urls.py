@@ -20,18 +20,19 @@ from core.views import home
 from django.conf.urls.static import static
 from django.conf import settings
 from core.views import Registrar
-
 #CRUD Endereço
 from core.views import cadastroEndereco, listagemEnderecos, alteraEndereco, excluiEndereco
 
 #CRUD User
-from core.views import cadastroEndereco, listagemEnderecos, alteraEndereco, excluiEndereco
+from core.views import cadastroCliente, registroCliente
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/registrar/', Registrar.as_view(), name='url_registrar'),
     path('', home, name='url_principal'),
+    #path('cadastroCliente/', cadastroCliente, name='url_cadastro_cliente'),
+    path('cadastroCliente/<int:id>', registroCliente, name='url_registro_cliente'),
     path('cadastroEndereco/', cadastroEndereco, name='url_cadastro_endereco'),
     path('listagemEnderecos/', listagemEnderecos, name='url_listagem_enderecos'),
     path('alteraEndereco/<int:id>/', alteraEndereco, name='url_altera_endereco'),

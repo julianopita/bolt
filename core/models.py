@@ -75,9 +75,8 @@ class Carro(models.Model):
 # Classe geral de pessoas
 class Pessoa(models.Model):
     nome = models.CharField(max_length=100, verbose_name='Nome')
-    email = models.EmailField(max_length=50, verbose_name='Email')
     identificacao = models.IntegerField(default=0, verbose_name='Identificação')
-    telefone = models.IntegerField(default=0, verbose_name='Identificação')
+    telefone = models.IntegerField(default=0, verbose_name='Telefone')
     endereco = models.ForeignKey(Endereco, on_delete=models.DO_NOTHING, verbose_name='Endereço')
     user = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, verbose_name='User')  # verificar se é assim
 
@@ -132,6 +131,7 @@ class Prestador(Pessoa):
 class Cliente(Pessoa):
     dataNascimento = models.DateField(verbose_name='Data de Nascimento')
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
+
 
     def __str__(self):
         return self.nome
