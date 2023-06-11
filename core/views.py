@@ -1,7 +1,4 @@
-import decimal
-
 from django.shortcuts import render, redirect
-
 from core.forms import FormEndereco, FormVaga, FormCarro, FormPessoa, FormAdministrador
 from core.forms import FormPrestador, FormCliente, FormPontoDeApoio, FormReserva, FormEvento, FormEventoCarro
 from core.models import Endereco, Vaga, Carro, Pessoa, Administrador
@@ -16,6 +13,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib import messages
+import decimal
 from datetime import datetime
 
 User = get_user_model()
@@ -26,8 +24,11 @@ def checkGroupAdmin(user):
 
 
 def home(request):
-    contexto = {'home': 'home'}
+    mapbox_access_token = 'pk.eyJ1IjoianVsaWFub3BpdGEiLCJhIjoiY2xpcnN2Yms4MTBkazNscW81aHFzeWpqcSJ9.O4NxJvr6Rf99AxjwJim3xg'
+    contexto = {'home': 'home', 'mapbox_access_token': mapbox_access_token}
     return render(request, 'core\index.html', contexto)
+
+
 
 
 class Registrar(generic.CreateView):
@@ -37,17 +38,6 @@ class Registrar(generic.CreateView):
     def get_success_url(self):
         success_url = reverse_lazy('url_registro_cliente', kwargs={'id': self.object.pk})
         return success_url
-
-    # def post(self, request, *args, **kwargs):
-    #     form=CustomUserCreationForm(request.POST)
-    #     if form.is_valid():
-    #         user = form.save(commit=False)
-    #         user.save()
-    #         user_group=Group.objects.get(name='Clientes')
-    #         user.groups.add(user_group)
-    #         return redirect(#success_url?)
-    #     else:
-    #         return render(request, self.template_name, {'form':form})
 
 
 # CRUD Endereço
@@ -569,3 +559,7 @@ def excluiEventoCarro(request, id):
         return render(request, 'core/aviso_exclusao.html', contexto)
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
+
+
+#Views dos mapas
+

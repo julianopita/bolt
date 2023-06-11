@@ -46,6 +46,9 @@ from core.views import cadastroEvento, listagemEventos, alteraEvento, excluiEven
 #CRUD EventoCarro
 from core.views import cadastroEventoCarro, listagemEventoCarros, alteraEventoCarro, excluiEventoCarro
 
+#Mapas
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
@@ -90,6 +93,8 @@ urlpatterns = [
     path('listagemEventoCarros/', listagemEventoCarros, name='url_listagem_evento_carros'),
     path('alteraEventoCarro/<int:id>/', alteraEventoCarro, name='url_altera_evento_carro'),
     path('excluiEventoCarro/<int:id>/', excluiEventoCarro, name='url_exclui_evento_carro'),
+
+
 ]
 
 
