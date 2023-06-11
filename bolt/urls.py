@@ -47,12 +47,13 @@ from core.views import cadastroEvento, listagemEventos, alteraEvento, excluiEven
 from core.views import cadastroEventoCarro, listagemEventoCarros, alteraEventoCarro, excluiEventoCarro
 
 #Mapas
-
+from core.views import geoDataVaga
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', home, name='url_principal'),
+    path('', geoDataVaga, name='url_principal'),
     path('accounts/registrarCliente/', registroCliente, name='url_registrar_cliente'),
     path('accounts/listagemClientes/', listagemClientes, name='url_listagem_clientes'),
     path('accounts/alteraCliente/<int:id>/', alteraCliente, name='url_altera_cliente'),

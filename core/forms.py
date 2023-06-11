@@ -29,7 +29,7 @@ class FormEndereco(ModelForm):
 class FormVaga(ModelForm):
     class Meta:
         model = Vaga
-        fields = ('endereco', 'recarga')
+        fields = ('endereco', 'recarga', 'latitude', 'longitude')
 
 
 class FormCarro(ModelForm):

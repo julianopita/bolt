@@ -24,11 +24,16 @@ def checkGroupAdmin(user):
 
 
 def home(request):
+    Vaga.objects.all()
     mapbox_access_token = 'pk.eyJ1IjoianVsaWFub3BpdGEiLCJhIjoiY2xpcnN2Yms4MTBkazNscW81aHFzeWpqcSJ9.O4NxJvr6Rf99AxjwJim3xg'
-    contexto = {'home': 'home', 'mapbox_access_token': mapbox_access_token}
+    contexto = {'home': 'home', 'mapbox_access_token': mapbox_access_token, 'description' : 'teste', 'Latitude' : Vaga.latitude, 'Longitude' : Vaga.longitude}
     return render(request, 'core\index.html', contexto)
 
-
+def geoDataVaga(request):
+    dados = Vaga.objects.all()
+    print(f"{dados.endereco.rua}, {dados.endereco.numero}")
+    contexto = {'home': 'home', 'description' : f"{dados.endereco.rua}, {dados.endereco.numero}", 'Latitude' : Vaga.latitude, 'Longitude' : Vaga.longitude}
+    return render(request, 'core\index.html', contexto)
 
 
 class Registrar(generic.CreateView):

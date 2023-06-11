@@ -34,6 +34,8 @@ class Vaga(models.Model):
     recarga = models.BooleanField(verbose_name="Possui recarga?")
     endereco = models.ForeignKey(Endereco, on_delete=models.DO_NOTHING, verbose_name='Endereço')
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
+    latitude = models.FloatField(default=0.00, blank=True, null=True, verbose_name='Latitude')
+    longitude = models.FloatField(default=0.00, blank=True, null=True, verbose_name='Longitude')
 
     def delete(self):
         self.isActive = False
