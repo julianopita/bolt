@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Lis_end
+{% endblock %}
+
+{% block main %}
+
+    <ul class="list-group">
+        {% for i in dados %}
+            {% if i.isActive == True %}
+                <li class="list-group-item">
+                    id: {{ i.id }} <br>
+                    Nome: {{ i.nome }} <br>
+                    Email: {{ i.user.email }} <br>
+                    Data de nascimento: {{ i.dataNascimento }} <br>
+                    Identificacao: {{ i.identificacao }} <br>
+                    Telefone: {{ i.telefone }} <br>
+                    Rua: {{ i.endereco.rua }}, {{ i.endereco.numero }} <br>
+                    Bairro: {{ i.endereco.bairro }}<br>
+                    Cidade: {{ i.endereco.cidade }} <br>
+                    CEP: {{ i.endereco.cep }} <br>
+                    Registro: {{ i.registro }} <br>
+                    Especialidade: {{ i.especialidade }} <br>
+
+                    <br>
+                    <a href="{% url 'url_altera_prestador' i.id %}">Editar</a>
+                    <a href="{% url 'url_exclui_prestador' i.id %}">Excluir</a>
+                </li>
+            {% endif %}
+
+        {% empty %}
+            Não há prestadores cadastrados.
+        {% endfor %}
+    </ul>
+
+    <button onclick="window.location.href='/'">Home</button>
+
+{% endblock %}

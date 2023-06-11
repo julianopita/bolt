@@ -35,7 +35,7 @@ class FormVaga(ModelForm):
 class FormCarro(ModelForm):
     class Meta:
         model = Carro
-        fields = ('placa', 'marca', 'modelo', 'cor', 'disponivel', 'vaga')
+        fields = ('placa', 'marca', 'modelo', 'cor', 'locacao', 'disponivel', 'vaga')
 
 
 class FormPessoa(ModelForm):
@@ -47,20 +47,19 @@ class FormPessoa(ModelForm):
 class FormAdministrador(ModelForm):
     class Meta:
         model = Administrador
-        fields = '__all__'
+        fields = ['nome', 'identificacao', 'telefone', 'matricula', 'cargo']
 
 
 class FormPrestador(ModelForm):
     class Meta:
         model = Prestador
-        fields = '__all__'
+        fields = ['nome', 'identificacao', 'telefone', 'registro', 'especialidade']
 
 
 class FormCliente(ModelForm):
     class Meta:
         model = Cliente
-        exclude = ('endereco', 'user', 'isActive')
-        fields = '__all__'
+        fields = ['nome', 'identificacao', 'telefone', 'dataNascimento']
 
 
 class FormPontoDeApoio(ModelForm):
@@ -78,10 +77,10 @@ class FormReserva(ModelForm):
 class FormEvento(ModelForm):
     class Meta:
         model = Evento
-        fields = '__all__'
+        fields = ('nome', 'tipo', 'criticidade')
 
 
 class FormEventoCarro(ModelForm):
     class Meta:
         model = EventoCarro
-        fields = '__all__'
+        fields = ('carro', 'evento', 'dataInicio', 'dataFim', 'resolvido')

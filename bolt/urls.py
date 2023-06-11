@@ -19,12 +19,14 @@ from django.urls import path, include
 from core.views import home
 from django.conf.urls.static import static
 from django.conf import settings
-from core.views import Registrar
+
 #CRUD Endereço
 from core.views import cadastroEndereco, listagemEnderecos, alteraEndereco, excluiEndereco
 
 #CRUD User
-from core.views import registroCliente
+from core.views import registroCliente, listagemClientes, alteraCliente, excluiCliente
+from core.views import registroPrestador,listagemPrestadores, alteraPrestador, excluiPrestador
+from core.views import registroAdministrador,listagemAdministradores, alteraAdministrador, excluiAdministrador
 
 #CRUD Vagas
 from core.views import cadastroVaga, listagemVagas, alteraVaga, excluiVaga
@@ -38,12 +40,28 @@ from core.views import cadastroCarro, listagemCarros, alteraCarro, excluiCarro
 #CRUD Reservas
 from core.views import cadastroReserva, listagemReservas, alteraReserva, excluiReserva
 
+#CRUD Eventos
+from core.views import cadastroEvento, listagemEventos, alteraEvento, excluiEvento
+
+#CRUD EventoCarro
+from core.views import cadastroEventoCarro, listagemEventoCarros, alteraEventoCarro, excluiEventoCarro
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    #path('accounts/registrar/', Registrar.as_view(), name='url_registrar'),
     path('', home, name='url_principal'),
-    path('accounts/registrar/', registroCliente, name='url_registrar'),
+    path('accounts/registrarCliente/', registroCliente, name='url_registrar_cliente'),
+    path('accounts/listagemClientes/', listagemClientes, name='url_listagem_clientes'),
+    path('accounts/alteraCliente/<int:id>/', alteraCliente, name='url_altera_cliente'),
+    path('accounts/excluiCliente/<int:id>/', excluiCliente, name='url_exclui_cliente'),
+    path('accounts/registrarPrestador/', registroPrestador, name='url_registrar_prestador'),
+    path('accounts/listagemPrestadores/', listagemPrestadores, name='url_listagem_prestadores'),
+    path('accounts/alteraPrestador/<int:id>/', alteraPrestador, name='url_altera_prestador'),
+    path('accounts/excluiPrestador/<int:id>/', excluiPrestador, name='url_exclui_prestador'),
+    path('accounts/registrarAdministrador/', registroAdministrador, name='url_registrar_administrador'),
+    path('accounts/listagemAdministradores/', listagemAdministradores, name='url_listagem_administradores'),
+    path('accounts/alteraAdministrador/<int:id>/', alteraAdministrador, name='url_altera_administrador'),
+    path('accounts/excluiAdministrador/<int:id>/', excluiAdministrador, name='url_exclui_administrador'),
     path('cadastroEndereco/', cadastroEndereco, name='url_cadastro_endereco'),
     path('listagemEnderecos/', listagemEnderecos, name='url_listagem_enderecos'),
     path('alteraEndereco/<int:id>/', alteraEndereco, name='url_altera_endereco'),
@@ -61,9 +79,18 @@ urlpatterns = [
     path('alteraCarro/<int:id>/', alteraCarro, name='url_altera_carro'),
     path('excluiCarro/<int:id>/', excluiCarro, name='url_exclui_carro'),
     path('cadastroReserva/', cadastroReserva, name='url_cadastro_reserva'),
-    path('listagemReserva/', listagemReservas, name='url_listagem_reservas'),
+    path('listagemReservas/', listagemReservas, name='url_listagem_reservas'),
     path('alteraReserva/<int:id>/', alteraReserva, name='url_altera_reserva'),
     path('excluiReserva/<int:id>/', excluiReserva, name='url_exclui_reserva'),
+    path('cadastroEvento/', cadastroEvento, name='url_cadastro_evento'),
+    path('listagemEventos/', listagemEventos, name='url_listagem_eventos'),
+    path('alteraEvento/<int:id>/', alteraEvento, name='url_altera_evento'),
+    path('excluiEvento/<int:id>/', excluiEvento, name='url_exclui_evento'),
+    path('cadastroEventoCarro/', cadastroEventoCarro, name='url_cadastro_evento_carro'),
+    path('listagemEventoCarros/', listagemEventoCarros, name='url_listagem_evento_carros'),
+    path('alteraEventoCarro/<int:id>/', alteraEventoCarro, name='url_altera_evento_carro'),
+    path('excluiEventoCarro/<int:id>/', excluiEventoCarro, name='url_exclui_evento_carro'),
 ]
+
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Lis_eve
+{% endblock %}
+
+{% block main %}
+
+<ul class="list-group">
+    {% for i in dados %}
+    <li class="list-group-item">
+        {% if i.isActive == True %}
+        <h4>id: {{ i.id }} </h4>
+            Nome: {{ i.nome }} <br>
+            Tipo: {{ i.tipo }} <br>
+            Criticidade: {{ i.criticidade }} <br>
+            <a href="{% url 'url_altera_evento' i.id %}">Editar</a>
+            <a href="{% url 'url_exclui_evento' i.id %}">Excluir</a>
+            <br>
+        {% endif %}
+    {% empty %}
+        Não há carros a exibir.
+        </li>
+    {% endfor %}
+</ul>
+
+<button onclick="window.location.href='/'">Home</button>
+
+{% endblock %}

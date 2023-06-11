@@ -1,6 +1,8 @@
 from django.db import models
 from users.models import CustomUser
 from django.contrib.auth import get_user_model
+from datetime import datetime
+from django.utils import timezone
 from django.views import generic
 
 User = get_user_model()
@@ -94,7 +96,7 @@ class Pessoa(models.Model):
 # ver como pegar o nome da superclasse pessoa
 class Administrador(Pessoa):
     matricula = models.IntegerField(default=0, verbose_name='Matrícula')
-    cargo = models.CharField(max_length=100, verbose_name='Nome')
+    cargo = models.CharField(max_length=100, verbose_name='Cargo')
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
 
     def delete(self):
@@ -198,6 +200,16 @@ class Reserva(models.Model):
         self.isActive = True
         self.save()
 
+    @property
+    def status(self):
+        now = timezone.make_aware(datetime.now(), timezone.get_default_timezone())
+        if self.dataFim == None and self.dataInicio > now:
+            return 'Futuro'
+        elif self.dataFim == None and self.dataInicio < now:
+            return 'Presente'
+        else:
+            return 'Passado'
+
     class Meta:
         verbose_name_plural = "Reservas"
 
@@ -207,9 +219,11 @@ class Evento(models.Model):
     nome = models.CharField(max_length=100, verbose_name='Nome do evento')
     tipo = models.CharField(max_length=50, verbose_name='Tipo')
     criticidade = models.CharField(max_length=50, verbose_name='Criticidade')
+    isActive = models.BooleanField(default=True, verbose_name='Ativo?')
+
 
     def __str__(self):
-        return {self.nome}
+        return self.nome
 
     class Meta:
         verbose_name_plural = "Eventos"
@@ -219,8 +233,8 @@ class EventoCarro(models.Model):
     carro = models.ForeignKey(Carro, on_delete=models.DO_NOTHING, verbose_name='Carro')
     evento = models.ForeignKey(Evento, on_delete=models.DO_NOTHING, verbose_name='Evento')
     dataInicio = models.DateTimeField(verbose_name='Data de início')
-    dataFim = models.DateTimeField(verbose_name='Data de fim')
-    resolvido = models.BooleanField(verbose_name="Resolvido?")
+    dataFim = models.DateTimeField(verbose_name='Data de fim', blank=True, null=True, default=None)
+    resolvido = models.BooleanField(default=False, verbose_name="Resolvido?")
     isActive = models.BooleanField(default=True, verbose_name='Ativo?')
 
     def delete(self):
@@ -230,3 +244,14 @@ class EventoCarro(models.Model):
     def undelete(self):
         self.isActive = True
         self.save()
+
+    @property
+
+    def status(self):
+        now = timezone.make_aware(datetime.now(), timezone.get_default_timezone())
+        if self.dataFim == None and self.dataInicio > now:
+            return 'Futuro'
+        elif self.dataFim == None and self.dataInicio < now:
+            return 'Presente'
+        else:
+            return 'Passado'

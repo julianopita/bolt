@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Lis_eve_car
+{% endblock %}
+
+{% block main %}
+
+<ul class="list-group">
+    {% for i in dados %}
+    <li class="list-group-item">
+        {% if i.isActive == True %}
+        <h4>id: {{ i.id }} </h4>
+            Data Início: {{ i.dataInicio }} <br>
+            {% if i.status == 'Passado' %}
+                Fim: {{ i.dataFim }} <br>
+                Resolvido?: {{ i.resolvido }} <br>
+                {{ i.status }}
+            {% elif i.status == 'Presente'  %}
+                O evento ainda está ativo. <br>
+                {{ i.status }}
+            {% else %}
+                O evento ainda não foi iniciado. <br>
+                {{ i.status }}
+            {% endif %}
+            Carro: {{ i.carro.placa }} <br>
+            Evento: {{ i.evento.nome }} <br>
+            Tipo: {{ i.evento.tipo }} <br>
+            Criticidade: {{ i.evento.criticidade }} <br>
+            Prestador: NAO ESQUECER
+            <a href="{% url 'url_altera_evento_carro' i.id %}">Editar</a>
+            <a href="{% url 'url_exclui_evento_carro' i.id %}">Excluir</a>
+            <br>
+        {% endif %}
+    {% empty %}
+        Não há eventos a exibir.
+        </li>
+    {% endfor %}
+</ul>
+
+<button onclick="window.location.href='/'">Home</button>
+
+{% endblock %}
