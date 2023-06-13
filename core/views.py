@@ -24,6 +24,9 @@ User = get_user_model()
 def checkGroupAdmin(user):
     return user.groups.filter(name='Administradores').exists()
 
+def checkGroupPrestador(user):
+    return user.groups.filter(name='Prestadores').exists()
+
 
 def home(request):
     contexto = {'home': 'home'}
@@ -38,20 +41,12 @@ class Registrar(generic.CreateView):
         success_url = reverse_lazy('url_registro_cliente', kwargs={'id': self.object.pk})
         return success_url
 
-    # def post(self, request, *args, **kwargs):
-    #     form=CustomUserCreationForm(request.POST)
-    #     if form.is_valid():
-    #         user = form.save(commit=False)
-    #         user.save()
-    #         user_group=Group.objects.get(name='Clientes')
-    #         user.groups.add(user_group)
-    #         return redirect(#success_url?)
-    #     else:
-    #         return render(request, self.template_name, {'form':form})
-
 
 # CRUD Endereço
 
+
+@login_required
+@user_passes_test(checkGroupAdmin)
 def cadastroEndereco(request):
     # verificar o if user is client etc.
     form = FormEndereco(request.POST or None, request.FILES or None)
@@ -62,19 +57,21 @@ def cadastroEndereco(request):
     return render(request, 'core\cadastro.html', contexto)
 
 
+@login_required
+@user_passes_test(checkGroupAdmin)
 def listagemEnderecos(request):
-    if request.user.is_staff:
         if request.POST and request.POST['input_pesquisa']:
             dados = Endereco.objects.filter(placa__icontains=request.POST['input_pesquisa'])
         else:
             dados = Endereco.objects.all()
         contexto = {'dados': dados, 'text_input': 'Digite o CEP', 'listagem': 'listagem'}
         return render(request, 'core/listagem_enderecos.html', contexto)
-    return render(request, 'aviso.html')
 
 
+
+@login_required
+@user_passes_test(checkGroupAdmin)
 def alteraEndereco(request, id):
-    if request.user.is_staff:  # verificar se usa
         obj = Endereco.objects.get(id=id)
         form = FormEndereco(request.POST or None, request.FILES or None, instance=obj)
         if request.POST:
@@ -83,9 +80,10 @@ def alteraEndereco(request, id):
                 return redirect('url_listagem_enderecos')
         contexto = {'form': form, 'txt_titulo': 'EditEndereco', 'txt_descrição': "Altera Endereço"}
         return render(request, 'core/cadastro.html', contexto)
-    return render(request, 'aviso.html')
 
 
+@login_required
+@user_passes_test(checkGroupAdmin)
 def excluiEndereco(request, id):  # alterar para isActive = false
     obj = Endereco.objects.get(id=id)
     contexto = {'txt_info': obj.cep, 'txt_url': '/listagemEnderecos/'}
@@ -121,7 +119,8 @@ def registroCliente(request):
                 'txt_titulo': 'Cadastro Cliente', 'txt_descricao': 'Cadastro do Cliente'}
     return render(request, 'registration/registrar.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def listagemClientes(request):
     if request.POST and request.POST['input_pesquisa']:
         dados = Cliente.objects.filter(pessoa__nome__icontains=request.POST['input_pesquisa'])
@@ -130,7 +129,8 @@ def listagemClientes(request):
     contexto = {'dados': dados, 'text_input': 'Digite o nome', 'listagem': 'listagem'}
     return render(request, 'core/listagem_clientes.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def alteraCliente(request, id):
     obj = Cliente.objects.get(id=id)
     form = FormCliente(request.POST or None, instance=obj)
@@ -143,7 +143,8 @@ def alteraCliente(request, id):
     contexto = {'form': form, 'txt_titulo': 'EditCliente', 'txt_descrição': "Altera Cliente"}
     return render(request, 'core/cadastro.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def excluiCliente(request, id):
     obj = Cliente.objects.get(id=id)
     contexto = {'txt_info': obj.nome, 'txt_url': '/accounts/listagemClientes/'}
@@ -154,7 +155,8 @@ def excluiCliente(request, id):
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def registroPrestador(request):
     # ReCaptchaField(widget=ReCaptchaV2Checkbox())
     user_form = CustomUserCreationForm(request.POST)
@@ -176,7 +178,8 @@ def registroPrestador(request):
                 'txt_titulo': 'Cadastro Prestador', 'txt_descricao': 'Cadastro do Prestador de Serviços'}
     return render(request, 'registration/registrar.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def listagemPrestadores(request):
     if request.POST and request.POST['input_pesquisa']:
         dados = Prestador.objects.filter(pessoa__nome__icontains=request.POST['input_pesquisa'])
@@ -185,7 +188,8 @@ def listagemPrestadores(request):
     contexto = {'dados': dados, 'text_input': 'Digite o nome', 'listagem': 'listagem'}
     return render(request, 'core/listagem_prestadores.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def alteraPrestador(request, id):
     obj = Prestador.objects.get(id=id)
     form = FormPrestador(request.POST or None, instance=obj)
@@ -196,7 +200,8 @@ def alteraPrestador(request, id):
     contexto = {'form': form, 'txt_titulo': 'EditPrestador', 'txt_descrição': "Altera Prestador"}
     return render(request, 'core/cadastro.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def excluiPrestador(request, id):
     obj = Prestador.objects.get(id=id)
     contexto = {'txt_info': obj.nome, 'txt_url': '/accounts/listagemPrestadores/'}
@@ -207,7 +212,8 @@ def excluiPrestador(request, id):
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def registroAdministrador(request):
     # ReCaptchaField(widget=ReCaptchaV2Checkbox())
     user_form = CustomUserCreationForm(request.POST)
@@ -229,7 +235,8 @@ def registroAdministrador(request):
                 'txt_titulo': 'Cadastro Administrador', 'txt_descricao': 'Cadastro do Administrador'}
     return render(request, 'registration/registrar.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def listagemAdministradores(request):
     if request.POST and request.POST['input_pesquisa']:
         dados = Administrador.objects.filter(pessoa__nome__icontains=request.POST['input_pesquisa'])
@@ -238,7 +245,8 @@ def listagemAdministradores(request):
     contexto = {'dados': dados, 'text_input': 'Digite o nome', 'listagem': 'listagem'}
     return render(request, 'core/listagem_administradores.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def alteraAdministrador(request, id):
     obj = Administrador.objects.get(id=id)
     form = FormAdministrador(request.POST or None, instance=obj)
@@ -249,7 +257,8 @@ def alteraAdministrador(request, id):
     contexto = {'form': form, 'txt_titulo': 'EditAdm', 'txt_descrição': "Altera Administrador"}
     return render(request, 'core/cadastro.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def excluiAdministrador(request, id):
     obj = Administrador.objects.get(id=id)
     contexto = {'txt_info': obj.nome, 'txt_url': '/accounts/listagemAdministradores/'}
@@ -264,7 +273,8 @@ def excluiAdministrador(request, id):
 # criar alterar e deletar
 
 # CRUD Vagas
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def cadastroVaga(request):
     # verificar if usergroup is administrador
     form = FormVaga(request.POST)
@@ -274,7 +284,8 @@ def cadastroVaga(request):
     contexto = {'form': form, 'txt_titulo': 'Cadastro Vaga', 'txt_descricao': 'Cadastro de Vaga'}
     return render(request, 'core\cadastro.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def listagemVagas(request):
     # if request.user.is_staff:
     if request.POST and request.POST['input_pesquisa']:
@@ -286,7 +297,8 @@ def listagemVagas(request):
 
 
 # return render(request, 'aviso.html')
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def alteraVaga(request, id):
     if request.user.is_staff:  # verificar se usa
         obj = Vaga.objects.get(id=id)
@@ -299,7 +311,8 @@ def alteraVaga(request, id):
         return render(request, 'core/cadastro.html', contexto)
     return render(request, 'aviso.html')
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def excluiVaga(request, id):
     obj = Vaga.objects.get(id=id)
     contexto = {'txt_info': obj.endereco.rua, 'txt_url': '/listagemVagas/'}
@@ -312,7 +325,8 @@ def excluiVaga(request, id):
 
 
 # CRUD PontoDeApoio
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def cadastroPonto(request):
     # verificar if usergroup is administrador
     form = FormPontoDeApoio(request.POST)
@@ -322,7 +336,8 @@ def cadastroPonto(request):
     contexto = {'form': form, 'txt_titulo': 'Cadastro Pontos de Apoio', 'txt_descricao': 'Cadastro de Pontos de Apoio'}
     return render(request, 'core\cadastro.html', contexto)
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def listagemPontos(request):
     # if request.user.is_staff:
     if request.POST and request.POST['input_pesquisa']:
@@ -335,7 +350,8 @@ def listagemPontos(request):
 
 
 # return render(request, 'aviso.html')
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def alteraPonto(request, id):
     if request.user.is_staff:  # verificar se usa
         obj = PontoDeApoio.objects.get(id=id)
@@ -348,7 +364,8 @@ def alteraPonto(request, id):
         return render(request, 'core/cadastro.html', contexto)
     return render(request, 'aviso.html')
 
-
+@login_required
+@user_passes_test(checkGroupAdmin)
 def excluiPonto(request, id):
     obj = PontoDeApoio.objects.get(id=id)
     contexto = {'txt_info': obj.endereco.rua, 'txt_url': '/listagemPontos/'}
@@ -431,7 +448,9 @@ def cadastroReserva(request):
     return render(request, 'core/cadastro.html', contexto)
 
 
+
 @login_required
+@user_passes_test(checkGroupAdmin)
 def listagemReservas(request):
     if request.POST and request.POST['input_pesquisa']:
         dados = Reserva.objects.filter(cliente__nome__icontains=request.POST['input_pesquisa'])
@@ -444,6 +463,7 @@ def listagemReservas(request):
 # return render(request, 'aviso.html')
 
 @login_required
+@user_passes_test(checkGroupAdmin)
 def alteraReserva(request, id):
     obj = Reserva.objects.get(id=id)
     form = FormReserva(request.POST or None, request.FILES or None, instance=obj)
@@ -457,6 +477,7 @@ def alteraReserva(request, id):
 
 
 @login_required
+@user_passes_test(checkGroupAdmin)
 def excluiReserva(request, id):
     obj = Reserva.objects.get(id=id)
     contexto = {'txt_info': obj.cliente.nome, 'txt_url': '/listagemReservas/'}
@@ -470,7 +491,7 @@ def excluiReserva(request, id):
 
 # CRUD Evento
 @login_required
-@user_passes_test(checkGroupAdmin)
+@user_passes_test(lambda u: checkGroupAdmin or checkGroupPrestador)
 def cadastroEvento(request):
     form = FormEvento(request.POST)
     if form.is_valid():
@@ -481,7 +502,7 @@ def cadastroEvento(request):
 
 
 @login_required
-@user_passes_test(checkGroupAdmin)
+@user_passes_test(lambda u: checkGroupAdmin or checkGroupPrestador)
 def listagemEventos(request):
     if request.POST and request.POST['input_pesquisa']:
         dados = Evento.objects.filter(nome__icontains=request.POST['input_pesquisa'])
@@ -494,7 +515,7 @@ def listagemEventos(request):
 # return render(request, 'aviso.html')
 
 @login_required
-@user_passes_test(checkGroupAdmin)
+@user_passes_test(lambda u: checkGroupAdmin or checkGroupPrestador)
 def alteraEvento(request, id):
     obj = Evento.objects.get(id=id)
     form = FormEvento(request.POST or None, request.FILES or None, instance=obj)
@@ -508,7 +529,7 @@ def alteraEvento(request, id):
 
 
 @login_required
-@user_passes_test(checkGroupAdmin)
+@user_passes_test(lambda u: checkGroupAdmin or checkGroupPrestador)
 def excluiEvento(request, id):
     obj = Evento.objects.get(id=id)
     contexto = {'txt_info': obj.nome, 'txt_url': '/listagemEventos/'}
@@ -521,7 +542,7 @@ def excluiEvento(request, id):
 
 
 @login_required
-@user_passes_test(checkGroupAdmin)
+@user_passes_test(lambda u: checkGroupAdmin or checkGroupPrestador)
 def cadastroEventoCarro(request):
     form = FormEventoCarro(request.POST)
     if form.is_valid():
@@ -532,7 +553,7 @@ def cadastroEventoCarro(request):
 
 
 @login_required
-@user_passes_test(checkGroupAdmin)
+@user_passes_test(lambda u: checkGroupAdmin or checkGroupPrestador)
 def listagemEventoCarros(request):
     if request.POST and request.POST['input_pesquisa']:
         dados = EventoCarro.objects.filter(carro__placa__icontains=request.POST['input_pesquisa'])
@@ -545,7 +566,7 @@ def listagemEventoCarros(request):
 # return render(request, 'aviso.html')
 
 @login_required
-@user_passes_test(checkGroupAdmin)
+@user_passes_test(lambda u: checkGroupAdmin or checkGroupPrestador)
 def alteraEventoCarro(request, id):
     obj = EventoCarro.objects.get(id=id)
     form = FormEventoCarro(request.POST or None, request.FILES or None, instance=obj)
@@ -559,7 +580,7 @@ def alteraEventoCarro(request, id):
 
 
 @login_required
-@user_passes_test(checkGroupAdmin)
+@user_passes_test(lambda u: checkGroupAdmin or checkGroupPrestador)
 def excluiEventoCarro(request, id):
     obj = EventoCarro.objects.get(id=id)
     contexto = {'txt_info': obj.id, 'txt_url': '/listagemEventoCarros/'}

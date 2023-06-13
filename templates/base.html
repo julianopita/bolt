@@ -7,9 +7,11 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% load template_extras %}
     {% block extrahead %}
     {% endblock %}
 </head>
+
 <body>
 <div class="container-fluid pt-1 pl-2">
     <div class="row bg-dark">
@@ -26,82 +28,98 @@
                         <!-- Links -->
                         <ul class="navbar-nav">
                             <!-- Dropdown -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                                    Pessoas
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/accounts/registrarCliente/">Cadastro Cliente</a>
-                                    <a class="dropdown-item" href="/accounts/listagemClientes/">Listagem Cliente</a>
-                                    <a class="dropdown-item" href="/accounts/registrarPrestador/">Cadastro Prestador</a>
-                                    <a class="dropdown-item" href="/accounts/listagemPrestadores/">Listagem Prestador</a>
-                                    <a class="dropdown-item" href="/accounts/registrarAdministrador/">Cadastro Administrador</a>
-                                    <a class="dropdown-item" href="/accounts/listagemAdministradores/">Listagem Administrador</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
-                                    Endereço
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/cadastroEndereco/">Cadastro</a>
-                                    <a class="dropdown-item" href="/listagemEnderecos/">Listagem</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
-                                    Vaga
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/cadastroVaga/">Cadastro</a>
-                                    <a class="dropdown-item" href="/listagemVagas/">Listagem</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
-                                    Pontos de apoio
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/cadastroPonto/">Cadastro</a>
-                                    <a class="dropdown-item" href="/listagemPontos/">Listagem</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
-                                    Carros
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/cadastroCarro/">Cadastro</a>
-                                    <a class="dropdown-item" href="/listagemCarros/">Listagem</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
-                                    Reservas
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/cadastroReserva/">Cadastro</a>
-                                    <a class="dropdown-item" href="/listagemReservas/">Listagem</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
-                                    Eventos
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/cadastroEvento/">Cadastro</a>
-                                    <a class="dropdown-item" href="/listagemEventos/">Listagem</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
-                                    Eventos com carros
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/cadastroEventoCarro/">Cadastro</a>
-                                    <a class="dropdown-item" href="/listagemEventoCarros/">Listagem</a>
-                                </div>
-                            </li>
+                            {% if request.user|has_group:'Administradores' %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                                        Pessoas
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/accounts/registrarCliente/">Cadastro Cliente</a>
+                                        <a class="dropdown-item" href="/accounts/listagemClientes/">Listagem Cliente</a>
+                                        <a class="dropdown-item" href="/accounts/registrarPrestador/">Cadastro
+                                            Prestador</a>
+                                        <a class="dropdown-item" href="/accounts/listagemPrestadores/">Listagem
+                                            Prestador</a>
+                                        <a class="dropdown-item" href="/accounts/registrarAdministrador/">Cadastro
+                                            Administrador</a>
+                                        <a class="dropdown-item" href="/accounts/listagemAdministradores/">Listagem
+                                            Administrador</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
+                                       data-toggle="dropdown">
+                                        Endereço
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/cadastroEndereco/">Cadastro</a>
+                                        <a class="dropdown-item" href="/listagemEnderecos/">Listagem</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
+                                       data-toggle="dropdown">
+                                        Vaga
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/cadastroVaga/">Cadastro</a>
+                                        <a class="dropdown-item" href="/listagemVagas/">Listagem</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
+                                       data-toggle="dropdown">
+                                        Pontos de apoio
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/cadastroPonto/">Cadastro</a>
+                                        <a class="dropdown-item" href="/listagemPontos/">Listagem</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
+                                       data-toggle="dropdown">
+                                        Carros
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/cadastroCarro/">Cadastro</a>
+                                        <a class="dropdown-item" href="/listagemCarros/">Listagem</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
+                                       data-toggle="dropdown">
+                                        Reservas
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/cadastroReserva/">Cadastro</a>
+                                        <a class="dropdown-item" href="/listagemReservas/">Listagem</a>
+                                    </div>
+                                </li>
+                            {% endif %}
+                            {% if request.user|has_group:'Prestadores' or request.user|has_group:'Administradores' %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
+                                       data-toggle="dropdown">
+                                        Eventos
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/cadastroEvento/">Cadastro</a>
+                                        <a class="dropdown-item" href="/listagemEventos/">Listagem</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
+                                       data-toggle="dropdown">
+                                        Eventos com carros
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/cadastroEventoCarro/">Cadastro</a>
+                                        <a class="dropdown-item" href="/listagemEventoCarros/">Listagem</a>
+                                    </div>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                     <!--Pesquisa-->
@@ -119,13 +137,13 @@
 
                     <div class="col text-white d-flex justify-content-center align-items-center">
                         {% if user.get_username %}
-                            Bem vindo(a) {{ user.get_username }} (&nbsp;
-                            <a href="/admin/">Admin</a>)|
-                            <a href="/accounts/logout/">Logout</a>)
+                            Bem vindo(a) {{ user.get_username }}
+                            <a href="/admin/">Admin</a>|
+                            <a href="/accounts/logout/">Logout</a>
                         {% else %}
-                            Usuário(a) não autenticado(a) (
+                            Usuário(a) não autenticado(a)
                             <a href="/accounts/login">Login</a> |
-                            <a href="/accounts/registrar/">Registrar</a> )
+                            <a href="/accounts/registrar/">Registrar</a>
                         {% endif %}
                     </div>
                 </div>
