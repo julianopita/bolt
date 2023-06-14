@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+    {{ form.media }}
+{% endblock %}
+
+{% block title %}
+    {{ txt_titulo }}
+{% endblock %}
+
+{% block main %}
+
+    <h3>{{ txt_descricao }}</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <li class="list-group-item">
+                <h4>Carro id: {{ dados.id }} </h4>
+                Placa: {{ dados.placa }} <br>
+                Marca: {{ dados.marca }} <br>
+                Modelo: {{ dados.modelo }} <br>
+                Cor: {{ dados.cor }} <br>
+                Valor da locação: {{ dados.locacao }} <br>
+        <button type="submit">Salvar</button>
+    <button onclick="window.location.href='/'">Cancelar</button>
+        </form>
+
+
+{% endblock %}

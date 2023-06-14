@@ -1,9 +1,8 @@
 import decimal
 
 from django.shortcuts import render, redirect
-
 from core.forms import FormEndereco, FormVaga, FormCarro, FormPessoa, FormAdministrador
-from core.forms import FormPrestador, FormCliente, FormPontoDeApoio, FormReserva, FormEvento, FormEventoCarro
+from core.forms import FormPrestador, FormCliente, FormPontoDeApoio, FormReserva, FormEvento, FormEventoCarro, FormCarroReserva
 from core.models import Endereco, Vaga, Carro, Pessoa, Administrador
 from core.models import Prestador, Cliente, PontoDeApoio, Reserva, Evento, EventoCarro
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -16,6 +15,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib import messages
+from django.contrib.gis.measure import D
 from datetime import datetime
 
 User = get_user_model()
@@ -24,8 +24,15 @@ User = get_user_model()
 def checkGroupAdmin(user):
     return user.groups.filter(name='Administradores').exists()
 
+
 def checkGroupPrestador(user):
     return user.groups.filter(name='Prestadores').exists()
+
+
+def checkUserId(request):
+    return request.user.id
+
+
 
 
 def home(request):
@@ -60,26 +67,24 @@ def cadastroEndereco(request):
 @login_required
 @user_passes_test(checkGroupAdmin)
 def listagemEnderecos(request):
-        if request.POST and request.POST['input_pesquisa']:
-            dados = Endereco.objects.filter(placa__icontains=request.POST['input_pesquisa'])
-        else:
-            dados = Endereco.objects.all()
-        contexto = {'dados': dados, 'text_input': 'Digite o CEP', 'listagem': 'listagem'}
-        return render(request, 'core/listagem_enderecos.html', contexto)
-
+    if request.POST and request.POST['input_pesquisa']:
+        dados = Endereco.objects.filter(placa__icontains=request.POST['input_pesquisa'])
+    else:
+        dados = Endereco.objects.all()
+    contexto = {'dados': dados, 'text_input': 'Digite o CEP', 'listagem': 'listagem'}
+    return render(request, 'core/listagem_enderecos.html', contexto)
 
 
 @login_required
-@user_passes_test(checkGroupAdmin)
 def alteraEndereco(request, id):
-        obj = Endereco.objects.get(id=id)
-        form = FormEndereco(request.POST or None, request.FILES or None, instance=obj)
-        if request.POST:
-            if form.is_valid():
-                form.save()
-                return redirect('url_listagem_enderecos')
-        contexto = {'form': form, 'txt_titulo': 'EditEndereco', 'txt_descrição': "Altera Endereço"}
-        return render(request, 'core/cadastro.html', contexto)
+    obj = Endereco.objects.get(id=id)
+    form = FormEndereco(request.POST or None, request.FILES or None, instance=obj)
+    if request.POST:
+        if form.is_valid():
+            form.save()
+            return redirect('url_listagem_enderecos')
+    contexto = {'form': form, 'txt_titulo': 'EditEndereco', 'txt_descrição': "Altera Endereço"}
+    return render(request, 'core/cadastro.html', contexto)
 
 
 @login_required
@@ -119,6 +124,7 @@ def registroCliente(request):
                 'txt_titulo': 'Cadastro Cliente', 'txt_descricao': 'Cadastro do Cliente'}
     return render(request, 'registration/registrar.html', contexto)
 
+
 @login_required
 @user_passes_test(checkGroupAdmin)
 def listagemClientes(request):
@@ -129,19 +135,20 @@ def listagemClientes(request):
     contexto = {'dados': dados, 'text_input': 'Digite o nome', 'listagem': 'listagem'}
     return render(request, 'core/listagem_clientes.html', contexto)
 
-@login_required
-@user_passes_test(checkGroupAdmin)
+
+
 def alteraCliente(request, id):
     obj = Cliente.objects.get(id=id)
     form = FormCliente(request.POST or None, instance=obj)
-    #form_extra = FormEndereco(request.POST or None, instance=obj)
+    # form_extra = FormEndereco(request.POST or None, instance=obj)
     if request.POST:
-        if form.is_valid():# and form_extra.is_valid():
+        if form.is_valid():  # and form_extra.is_valid():
             form.save()
-            #form_extra.save()
+            # form_extra.save()
             return redirect('url_listagem_clientes')
     contexto = {'form': form, 'txt_titulo': 'EditCliente', 'txt_descrição': "Altera Cliente"}
     return render(request, 'core/cadastro.html', contexto)
+
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -154,6 +161,7 @@ def excluiCliente(request, id):
         return render(request, 'core/aviso_exclusao.html', contexto)
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
+
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -178,6 +186,7 @@ def registroPrestador(request):
                 'txt_titulo': 'Cadastro Prestador', 'txt_descricao': 'Cadastro do Prestador de Serviços'}
     return render(request, 'registration/registrar.html', contexto)
 
+
 @login_required
 @user_passes_test(checkGroupAdmin)
 def listagemPrestadores(request):
@@ -187,6 +196,7 @@ def listagemPrestadores(request):
         dados = Prestador.objects.all()
     contexto = {'dados': dados, 'text_input': 'Digite o nome', 'listagem': 'listagem'}
     return render(request, 'core/listagem_prestadores.html', contexto)
+
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -200,6 +210,7 @@ def alteraPrestador(request, id):
     contexto = {'form': form, 'txt_titulo': 'EditPrestador', 'txt_descrição': "Altera Prestador"}
     return render(request, 'core/cadastro.html', contexto)
 
+
 @login_required
 @user_passes_test(checkGroupAdmin)
 def excluiPrestador(request, id):
@@ -211,6 +222,7 @@ def excluiPrestador(request, id):
         return render(request, 'core/aviso_exclusao.html', contexto)
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
+
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -235,6 +247,7 @@ def registroAdministrador(request):
                 'txt_titulo': 'Cadastro Administrador', 'txt_descricao': 'Cadastro do Administrador'}
     return render(request, 'registration/registrar.html', contexto)
 
+
 @login_required
 @user_passes_test(checkGroupAdmin)
 def listagemAdministradores(request):
@@ -244,6 +257,7 @@ def listagemAdministradores(request):
         dados = Administrador.objects.all()
     contexto = {'dados': dados, 'text_input': 'Digite o nome', 'listagem': 'listagem'}
     return render(request, 'core/listagem_administradores.html', contexto)
+
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -256,6 +270,7 @@ def alteraAdministrador(request, id):
             return redirect('url_listagem_administradores')
     contexto = {'form': form, 'txt_titulo': 'EditAdm', 'txt_descrição': "Altera Administrador"}
     return render(request, 'core/cadastro.html', contexto)
+
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -284,6 +299,7 @@ def cadastroVaga(request):
     contexto = {'form': form, 'txt_titulo': 'Cadastro Vaga', 'txt_descricao': 'Cadastro de Vaga'}
     return render(request, 'core\cadastro.html', contexto)
 
+
 @login_required
 @user_passes_test(checkGroupAdmin)
 def listagemVagas(request):
@@ -311,6 +327,7 @@ def alteraVaga(request, id):
         return render(request, 'core/cadastro.html', contexto)
     return render(request, 'aviso.html')
 
+
 @login_required
 @user_passes_test(checkGroupAdmin)
 def excluiVaga(request, id):
@@ -335,6 +352,7 @@ def cadastroPonto(request):
         return redirect('url_principal')
     contexto = {'form': form, 'txt_titulo': 'Cadastro Pontos de Apoio', 'txt_descricao': 'Cadastro de Pontos de Apoio'}
     return render(request, 'core\cadastro.html', contexto)
+
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -363,6 +381,7 @@ def alteraPonto(request, id):
         contexto = {'form': form, 'txt_titulo': 'EditPonto', 'txt_descrição': "Altera Pontos de Apoio"}
         return render(request, 'core/cadastro.html', contexto)
     return render(request, 'aviso.html')
+
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -446,7 +465,6 @@ def cadastroReserva(request):
     contexto = {'form': form,
                 'txt_titulo': 'Cadastro Reserva', 'txt_descricao': 'Cadastro da Reserva'}
     return render(request, 'core/cadastro.html', contexto)
-
 
 
 @login_required
@@ -590,3 +608,92 @@ def excluiEventoCarro(request, id):
         return render(request, 'core/aviso_exclusao.html', contexto)
     else:
         return render(request, 'core/confirma_exclusao.html', contexto)
+
+
+# Casos funcionais - 001
+
+def CarrosDisponiveis(request):
+    # Na implementacao real recebe latitude e longitude do usuário em formato de dicionário
+    # Usuário indica na interface 001 a região onde quer ver
+    # A partir do endereço ou do clique no mapa, a funcao recupera latitude e longitude - não implementado:
+    # No exemplo vamos substituir por duas cidades
+
+    #if request.POST:
+        # A partir do endereço ou do clique no mapa, a funcao recupera latitude e longitude - não implementado:
+        # No exemplo vamos substituir por duas cidades hardcoded. Utilizar latitude e longitude demanda alterações no banco de dados
+
+        # carros_prox = carros.objects.filter(vaga__coordinates__distance_lte=(locale, D(km=4)))
+    if request.POST and request.POST['input_pesquisa']:
+        dados = Carro.objects.filter(vaga__endereco__cidade__icontains= request.POST['input_pesquisa'])
+    else:
+        dados = {}
+    contexto = {'dados': dados, 'text_input': 'Digite a região onde quer procurar carros'}
+    return render(request, 'core/carros_disponiveis.html', contexto)
+
+
+@login_required
+def CarroReserva(request, id):
+    form = FormCarroReserva(request.POST)
+    dados = Carro.objects.get(id=id)
+    form_carro = FormCarro(request.POST or None, request.FILES or None, instance=dados)
+    if form.is_valid():
+        rsr = form.save(commit=False)
+        #car = form_carro.save(commit=False)
+        if rsr.dataFim:
+            timediff = rsr.dataFim - rsr.dataInicio
+            timehours = (((timediff.total_seconds() / 60) / 60) / 24)
+            rsr.tempoReserva = timehours
+            rsr.valor = rsr.carro.locacao * decimal.Decimal(timehours)
+
+        rsr.cliente = Cliente.objects.get(user__id=request.user.id)
+        rsr.carro = Carro.objects.get(id=id)
+        form.save()
+        #form_carro.save()
+        return redirect('url_principal')
+    contexto = {'form': form, 'dados': dados,
+                'txt_titulo': 'ReservaCarro', 'txt_descricao': 'Reserva de carro'}
+    return render(request, 'core/cadastro_carro_reserva.html', contexto)
+
+
+@login_required
+def usuarioListagemReservas(request):
+    dados = Reserva.objects.filter(cliente__user__id__exact=request.user.id)
+    contexto = {'dados': dados, 'text_input': 'Digite o numero da reserva'}
+    return render(request, 'core/listagem_reservas.html', contexto)
+
+@login_required
+def alteraReserva(request, id):
+    obj = Reserva.objects.get(id=id)
+    form = FormReserva(request.POST or None, request.FILES or None, instance=obj)
+    if request.POST:
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Dados da reserva alterados com sucesso!')
+            return redirect('url_listagem_reservas')
+    contexto = {'form': form, 'txt_titulo': 'EditReserva', 'txt_descrição': "Altera Reservas"}
+    return render(request, 'core/cadastro.html', contexto)
+
+#Dados clientes
+@login_required
+def listagemDadosCliente(request):
+    dados = Cliente.objects.filter(user__id__exact=request.user.id)
+    contexto = {'dados': dados, 'text_input': 'Digite o numero da reserva'}
+    return render(request, 'core/listagem_clientes.html', contexto)
+
+
+@login_required
+@user_passes_test(checkGroupAdmin)
+def alteraCliente(request, id):
+    obj = Cliente.objects.get(id=id)
+    form = FormCliente(request.POST or None, instance=obj)
+    # form_extra = FormEndereco(request.POST or None, instance=obj)
+    if request.POST:
+        if form.is_valid():  # and form_extra.is_valid():
+            form.save()
+            # form_extra.save()
+            return redirect('url_listagem_clientes')
+    contexto = {'form': form, 'txt_titulo': 'EditCliente', 'txt_descrição': "Altera Cliente"}
+    return render(request, 'core/cadastro.html', contexto)
+
+
+

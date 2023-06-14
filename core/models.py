@@ -20,6 +20,8 @@ class Endereco(models.Model):
     numero = models.IntegerField(default=0, verbose_name='Número')
     bairro = models.CharField(max_length=50, verbose_name='Bairro')
     cep = models.IntegerField(default=0000000, verbose_name='CEP')
+    longitude = models.FloatField(default=0.00, verbose_name='Longitude')
+    latitude = models.FloatField(default=0.00, verbose_name='Latitude')
 
     def __str__(self):
         return f"{self.rua}, {self.numero} - {self.cidade}"

@@ -84,3 +84,8 @@ class FormEventoCarro(ModelForm):
     class Meta:
         model = EventoCarro
         fields = ('carro', 'evento', 'dataInicio', 'dataFim', 'resolvido')
+
+class FormCarroReserva(ModelForm):
+    class Meta:
+        model = Reserva
+        fields = ('dataInicio', 'dataFim')

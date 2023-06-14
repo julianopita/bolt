@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Lis_car
+{% endblock %}
+
+{% block main %}
+
+    <div class="col">
+
+        <form class="form-inline" method="post">
+            {% csrf_token %}
+            <label for="input_pesquisa">Escolha uma cidade</label>
+            <select name="input_pesquisa" id="ïnput_pesquisa">
+                <option value="Bragança Paulista">Bragança Paulista</option>
+                <option value="São Paulo">São Paulo</option>
+            </select>
+            <br>
+            <br>
+            <input type="submit" value="Pesquisa"></input>
+        </form>
+
+    </div>
+
+    <ul class="list-group">
+        {% for i in dados %}
+            <li class="list-group-item">
+                {% if i.disponivel == True %}
+                    <h4>Carro id: {{ i.id }} </h4>
+                    Placa: {{ i.placa }} <br>
+                    Marca: {{ i.marca }} <br>
+                    Modelo: {{ i.modelo }} <br>
+                    Cor: {{ i.cor }} <br>
+                    Valor da locação: {{ i.locacao }} <br>
+                    Disponível? {{ i.disponivel }} <br>
+
+                    {% if i.vaga.id != None %}
+                        O carro está atualmente parado em uma vaga.<br>
+                        Vaga id: {{ i.vaga.id }} <br>
+                        Endereço: {{ i.vaga.endereco.rua }}, {{ i.vaga.endereco.numero }}, {{ i.vaga.endereco.bairro }},
+                        {{ i.vaga.endereco.cep }}<br>
+                        Recarga: {{ i.vaga.recarga }}<br>
+                        Longitude: {{ i.vaga.longitude }}<br>
+                        Latitude: {{ i.vaga.latitude }}<br>
+                    {% else %}
+                        O carro não está em nenhuma vaga.<br>
+                    {% endif %}
+                    <a href="{% url 'url_carro_reserva' i.id %}">Reservar</a>
+                    <br>
+                {% endif %}
+            </li>
+        {% empty %}
+            Não temos carros disponíveis na sua região.
+
+        {% endfor %}
+    </ul>
+
+    <button onclick="window.location.href='/'">Home</button>
+
+{% endblock %}

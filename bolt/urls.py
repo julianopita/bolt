@@ -46,6 +46,12 @@ from core.views import cadastroEvento, listagemEventos, alteraEvento, excluiEven
 #CRUD EventoCarro
 from core.views import cadastroEventoCarro, listagemEventoCarros, alteraEventoCarro, excluiEventoCarro
 
+#funcionalidades
+from core.views import CarrosDisponiveis, CarroReserva, usuarioListagemReservas
+
+#Dados usuário
+from core.views import listagemDadosCliente
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
@@ -90,6 +96,12 @@ urlpatterns = [
     path('listagemEventoCarros/', listagemEventoCarros, name='url_listagem_evento_carros'),
     path('alteraEventoCarro/<int:id>/', alteraEventoCarro, name='url_altera_evento_carro'),
     path('excluiEventoCarro/<int:id>/', excluiEventoCarro, name='url_exclui_evento_carro'),
+    #funcionalidades
+    path('CarrosDisponiveis/', CarrosDisponiveis, name='url_carros_disponiveis'),
+    path('CarroReserva/<int:id>/', CarroReserva, name='url_carro_reserva'),
+    path('usuarioListagemReservas/', usuarioListagemReservas, name='url_usuario_listagem_reservas'),
+    #dados do usuario pelo usuario
+    path('listagemMeusDados/', listagemDadosCliente, name='url_listagem_dados_cliente'),
 ]
 
 

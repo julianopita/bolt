@@ -120,6 +120,19 @@
                                     </div>
                                 </li>
                             {% endif %}
+                            {% if request.user|has_group:'Clientes' %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
+                                       data-toggle="dropdown">
+                                        Minhas reservas
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/CarrosDisponiveis/">Fazer nova reserva</a>
+                                        <a class="dropdown-item" href="/usuarioListagemReservas/">Ver minhas reservas</a>
+                                        <a class="dropdown-item" href="/listagemMeusDados/">Ver meus dados</a>
+                                    </div>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                     <!--Pesquisa-->
