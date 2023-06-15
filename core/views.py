@@ -1,26 +1,27 @@
 import decimal
-
 from django.shortcuts import render, redirect
 from core.forms import FormEndereco, FormVaga, FormCarro, FormPessoa, FormAdministrador
-from core.forms import FormPrestador, FormCliente, FormPontoDeApoio, FormReserva, FormEvento, FormEventoCarro, FormCarroReserva
+from core.forms import FormPrestador, FormCliente, FormPontoDeApoio, FormReserva, FormEvento, FormEventoCarro, \
+    FormCarroReserva
 from core.models import Endereco, Vaga, Carro, Pessoa, Administrador
 from core.models import Prestador, Cliente, PontoDeApoio, Reserva, Evento, EventoCarro
 from django.contrib.auth.decorators import login_required, user_passes_test
-from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptchaV2Checkbox
 from django.views import generic
 from users.forms import CustomUserCreationForm
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib import messages
-from django.contrib.gis.measure import D
-from datetime import datetime
 
 User = get_user_model()
 
 
+def home(request):
+    contexto = {'home': 'home'}
+    return render(request, 'core\index.html', contexto)
+
+
+# Controle de acesso
 def checkGroupAdmin(user):
     return user.groups.filter(name='Administradores').exists()
 
@@ -33,13 +34,7 @@ def checkUserId(request):
     return request.user.id
 
 
-
-
-def home(request):
-    contexto = {'home': 'home'}
-    return render(request, 'core\index.html', contexto)
-
-
+# Registro de usuario
 class Registrar(generic.CreateView):
     form_class = CustomUserCreationForm
     template_name = 'registration/registrar.html'
@@ -50,7 +45,6 @@ class Registrar(generic.CreateView):
 
 
 # CRUD Endereço
-
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -102,7 +96,6 @@ def excluiEndereco(request, id):  # alterar para isActive = false
 
 # CRUD Pessoas e usuários
 
-
 def registroCliente(request):
     # ReCaptchaField(widget=ReCaptchaV2Checkbox())
     user_form = CustomUserCreationForm(request.POST)
@@ -136,7 +129,7 @@ def listagemClientes(request):
     return render(request, 'core/listagem_clientes.html', contexto)
 
 
-
+@login_required
 def alteraCliente(request, id):
     obj = Cliente.objects.get(id=id)
     form = FormCliente(request.POST or None, instance=obj)
@@ -285,13 +278,10 @@ def excluiAdministrador(request, id):
         return render(request, 'core/confirma_exclusao.html', contexto)
 
 
-# criar alterar e deletar
-
 # CRUD Vagas
 @login_required
 @user_passes_test(checkGroupAdmin)
 def cadastroVaga(request):
-    # verificar if usergroup is administrador
     form = FormVaga(request.POST)
     if form.is_valid():
         form.save()
@@ -303,7 +293,6 @@ def cadastroVaga(request):
 @login_required
 @user_passes_test(checkGroupAdmin)
 def listagemVagas(request):
-    # if request.user.is_staff:
     if request.POST and request.POST['input_pesquisa']:
         dados = Vaga.objects.filter(endereco__cep__icontains=request.POST['input_pesquisa'])
     else:
@@ -316,7 +305,6 @@ def listagemVagas(request):
 @login_required
 @user_passes_test(checkGroupAdmin)
 def alteraVaga(request, id):
-    if request.user.is_staff:  # verificar se usa
         obj = Vaga.objects.get(id=id)
         form = FormVaga(request.POST, instance=obj)
         if request.POST:
@@ -325,7 +313,7 @@ def alteraVaga(request, id):
                 return redirect('url_listagem_vagas')
         contexto = {'form': form, 'txt_titulo': 'EditVaga', 'txt_descrição': "Altera Vagas"}
         return render(request, 'core/cadastro.html', contexto)
-    return render(request, 'aviso.html')
+
 
 
 @login_required
@@ -345,7 +333,6 @@ def excluiVaga(request, id):
 @login_required
 @user_passes_test(checkGroupAdmin)
 def cadastroPonto(request):
-    # verificar if usergroup is administrador
     form = FormPontoDeApoio(request.POST)
     if form.is_valid():
         form.save()
@@ -371,7 +358,6 @@ def listagemPontos(request):
 @login_required
 @user_passes_test(checkGroupAdmin)
 def alteraPonto(request, id):
-    if request.user.is_staff:  # verificar se usa
         obj = PontoDeApoio.objects.get(id=id)
         form = FormPontoDeApoio(request.POST, instance=obj)
         if request.POST:
@@ -380,7 +366,7 @@ def alteraPonto(request, id):
                 return redirect('url_listagem_pontos')
         contexto = {'form': form, 'txt_titulo': 'EditPonto', 'txt_descrição': "Altera Pontos de Apoio"}
         return render(request, 'core/cadastro.html', contexto)
-    return render(request, 'aviso.html')
+
 
 
 @login_required
@@ -478,7 +464,6 @@ def listagemReservas(request):
     return render(request, 'core/listagem_reservas.html', contexto)
 
 
-# return render(request, 'aviso.html')
 
 @login_required
 @user_passes_test(checkGroupAdmin)
@@ -581,7 +566,6 @@ def listagemEventoCarros(request):
     return render(request, 'core/listagem_evento_carros.html', contexto)
 
 
-# return render(request, 'aviso.html')
 
 @login_required
 @user_passes_test(lambda u: checkGroupAdmin or checkGroupPrestador)
@@ -618,13 +602,13 @@ def CarrosDisponiveis(request):
     # A partir do endereço ou do clique no mapa, a funcao recupera latitude e longitude - não implementado:
     # No exemplo vamos substituir por duas cidades
 
-    #if request.POST:
-        # A partir do endereço ou do clique no mapa, a funcao recupera latitude e longitude - não implementado:
-        # No exemplo vamos substituir por duas cidades hardcoded. Utilizar latitude e longitude demanda alterações no banco de dados
+    # if request.POST:
+    # A partir do endereço ou do clique no mapa, a funcao recupera latitude e longitude - não implementado:
+    # No exemplo vamos substituir por duas cidades hardcoded. Utilizar latitude e longitude demanda alterações no banco de dados
 
-        # carros_prox = carros.objects.filter(vaga__coordinates__distance_lte=(locale, D(km=4)))
+    # carros_prox = carros.objects.filter(vaga__coordinates__distance_lte=(locale, D(km=4)))
     if request.POST and request.POST['input_pesquisa']:
-        dados = Carro.objects.filter(vaga__endereco__cidade__icontains= request.POST['input_pesquisa'])
+        dados = Carro.objects.filter(vaga__endereco__cidade__icontains=request.POST['input_pesquisa'])
     else:
         dados = {}
     contexto = {'dados': dados, 'text_input': 'Digite a região onde quer procurar carros'}
@@ -635,20 +619,17 @@ def CarrosDisponiveis(request):
 def CarroReserva(request, id):
     form = FormCarroReserva(request.POST)
     dados = Carro.objects.get(id=id)
-    form_carro = FormCarro(request.POST or None, request.FILES or None, instance=dados)
     if form.is_valid():
         rsr = form.save(commit=False)
-        #car = form_carro.save(commit=False)
         if rsr.dataFim:
             timediff = rsr.dataFim - rsr.dataInicio
             timehours = (((timediff.total_seconds() / 60) / 60) / 24)
             rsr.tempoReserva = timehours
             rsr.valor = rsr.carro.locacao * decimal.Decimal(timehours)
-
         rsr.cliente = Cliente.objects.get(user__id=request.user.id)
         rsr.carro = Carro.objects.get(id=id)
         form.save()
-        #form_carro.save()
+        # form_carro.save()
         return redirect('url_principal')
     contexto = {'form': form, 'dados': dados,
                 'txt_titulo': 'ReservaCarro', 'txt_descricao': 'Reserva de carro'}
@@ -660,6 +641,7 @@ def usuarioListagemReservas(request):
     dados = Reserva.objects.filter(cliente__user__id__exact=request.user.id)
     contexto = {'dados': dados, 'text_input': 'Digite o numero da reserva'}
     return render(request, 'core/listagem_reservas.html', contexto)
+
 
 @login_required
 def alteraReserva(request, id):
@@ -673,7 +655,8 @@ def alteraReserva(request, id):
     contexto = {'form': form, 'txt_titulo': 'EditReserva', 'txt_descrição': "Altera Reservas"}
     return render(request, 'core/cadastro.html', contexto)
 
-#Dados clientes
+
+# Dados clientes
 @login_required
 def listagemDadosCliente(request):
     dados = Cliente.objects.filter(user__id__exact=request.user.id)
@@ -686,14 +669,9 @@ def listagemDadosCliente(request):
 def alteraCliente(request, id):
     obj = Cliente.objects.get(id=id)
     form = FormCliente(request.POST or None, instance=obj)
-    # form_extra = FormEndereco(request.POST or None, instance=obj)
     if request.POST:
-        if form.is_valid():  # and form_extra.is_valid():
+        if form.is_valid():
             form.save()
-            # form_extra.save()
             return redirect('url_listagem_clientes')
     contexto = {'form': form, 'txt_titulo': 'EditCliente', 'txt_descrição': "Altera Cliente"}
     return render(request, 'core/cadastro.html', contexto)
-
-
-

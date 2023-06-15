@@ -3,7 +3,7 @@ from users.models import CustomUser
 from django.contrib.auth import get_user_model
 from datetime import datetime
 from django.utils import timezone
-from django.views import generic
+
 
 User = get_user_model()
 
