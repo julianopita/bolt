@@ -38,7 +38,13 @@
                             <h3 class="h4 text-black">{{ carro.marca }} {{ carro.modelo }}</h3>
                             <p class="mb-4 text-gray-500">R${{ carro.locacao }}/dia</p>
                             <div class="d-flex justify-content-center">
-                                <p><button class="btn btn-primary me-1 py-2 px-4 rounded-0" type="button" data-bs-toggle="modal" data-bs-target="#modalDetalhesCarro">Ver mais</button></p>
+                                <p><button class="btn btn-primary me-1 py-2 px-4 rounded-0 ver-mais-btn" type="button"
+                                           data-carro-placa="{{ carro.placa }}" data-carro-marca="{{ carro.marca }}"
+                                           data-carro-modelo="{{ carro.modelo }}" data-carro-cor="{{ carro.cor }}"
+                                           data-carro-rua="{{ carro.vaga.endereco.rua }}" data-carro-bairro="{{ carro.vaga.endereco.bairro }}"
+                                           data-carro-cidade="{{ carro.vaga.endereco.cidade }}" data-carro-vaga="{{ carro.vaga.nome }}"
+                                           data-carro-locacao="{{ carro.locacao }}"
+                                           data-bs-toggle="modal" data-bs-target="#modalDetalhesCarro">Ver mais</button></p>
                                 <p><a href="{% url 'url_carro_reserva' carro.id %}" class="btn btn-secondary-blue mr-1 py-2 px-4 rounded-0">Reservar</a></p>
                             </div>
                         </div>

@@ -47,7 +47,40 @@
     <script>
          $(function () {
             $('#input_pesquisa').val('{{ cidade_selecionada }}')
+
+            $('.ver-mais-btn').click(function() {
+                // Obter o ID do carro a partir do atributo de dados
+                var carroPlaca = $(this).data('carro-placa');
+                var carroMarca = $(this).data('carro-marca');
+                var carroModelo = $(this).data('carro-modelo');
+                var carroCor = $(this).data('carro-cor');
+                var carroRua = $(this).data('carro-rua');
+                var carroBairro = $(this).data('carro-bairro');
+                var carroCidade = $(this).data('carro-cidade');
+                var carroVaga = $(this).data('carro-vaga');
+                var carroLocacao = $(this).data('carro-locacao');
+
+                // Aqui você pode fazer uma requisição AJAX para buscar as informações do carro com o ID fornecido
+
+                // Preencher o modal com as informações do carro recuperadas
+                // Exemplo de código para exibir o modal e preencher os elementos HTML
+                $('#modalDetalhesCarro .modal-title').text(carroMarca.toUpperCase() + ' ' + carroModelo.toUpperCase());
+                $('#modalDetalhesCarro .modal-body #label-placa-carro').text(carroPlaca.toUpperCase())
+                $('#modalDetalhesCarro .modal-body #label-marca-carro').text(carroMarca.toUpperCase())
+                $('#modalDetalhesCarro .modal-body #label-modelo-carro').text(carroModelo.toUpperCase())
+                $('#modalDetalhesCarro .modal-body #label-cor-carro').text(carroCor.toUpperCase())
+                $('#modalDetalhesCarro .modal-body #label-rua-carro').text(carroRua.toUpperCase())
+                $('#modalDetalhesCarro .modal-body #label-bairro-carro').text(carroBairro.toUpperCase())
+                $('#modalDetalhesCarro .modal-body #label-cidade-carro').text(carroCidade.toUpperCase())
+                $('#modalDetalhesCarro .modal-body #label-vaga-carro').text(carroVaga.toUpperCase())
+                $('#modalDetalhesCarro .modal-body #label-locacao-carro').text('R$' + carroLocacao.toUpperCase())
+
+                // Abrir o modal
+                $('#carro-modal').modal('show');
+            });
         });
+
+
     </script>
     <script src=" {% static 'js/main.js' %}"></script>
 </body>
