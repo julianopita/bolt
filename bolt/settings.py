@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
     'crispy_forms',
     'crispy_bootstrap4',
+    'fontawesomefree',
 ]
 
 MIDDLEWARE = [

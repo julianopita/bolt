@@ -97,7 +97,7 @@ urlpatterns = [
     path('alteraEventoCarro/<int:id>/', alteraEventoCarro, name='url_altera_evento_carro'),
     path('excluiEventoCarro/<int:id>/', excluiEventoCarro, name='url_exclui_evento_carro'),
     #funcionalidades
-    path('CarrosDisponiveis/', CarrosDisponiveis, name='url_carros_disponiveis'),
+    path('CarrosDisponiveis/<str:regiao>/', CarrosDisponiveis, name='url_carros_disponiveis'),
     path('CarroReserva/<int:id>/', CarroReserva, name='url_carro_reserva'),
     path('usuarioListagemReservas/', usuarioListagemReservas, name='url_usuario_listagem_reservas'),
     #dados do usuario pelo usuario
