@@ -6,37 +6,53 @@ Lis_car
 {% endblock %}
 
 {% block main %}
-
-<ul class="list-group">
-    {% for i in dados %}
-    <li class="list-group-item">
-        {% if i.isActive == True %}
-        <h4>Carro id: {{ i.id }} </h4>
-            Placa: {{ i.placa }} <br>
-            Marca: {{ i.marca }} <br>
-            Modelo: {{ i.modelo }} <br>
-            Cor: {{ i.cor }} <br>
-            Valor da locação: {{ i.locacao }} <br>
-            Disponível? {{ i.disponivel }} <br>
-
-            {% if i.vaga.id != None %}
-                O carro está atualmente parado em uma vaga.<br>
-                Vaga id: {{ i.vaga.id }} <br>
-                Endereço: {{ i.vaga.endereco.rua }}, {{ i.vaga.endereco.numero }}, {{ i.vaga.endereco.bairro }}, {{ i.vaga.endereco.cep }}<br>
-                Recarga: {{ i.vaga.recarga }} <br>
-            {% else %}
-                O carro não está em nenhuma vaga.<br>
-            {% endif %}
-            <a href="{% url 'url_altera_carro' i.id %}">Editar</a>
-            <a href="{% url 'url_exclui_carro' i.id %}">Excluir</a>
-            <br>
-        {% endif %}
-    {% empty %}
-        Não há carros a exibir.
-        </li>
-    {% endfor %}
-</ul>
-
-<button onclick="window.location.href='/'">Home</button>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+        <div class="col-md-10">
+            <table class="table table-bordered table-hover tabela-cadastro">
+              <thead>
+              <tr>
+                <th>Placa</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Cor</th>
+                <th>Valor Locação</th>
+                <th>Disponível</th>
+                <th>Cep Vaga</th>
+                <th>Vaga</th>
+                <th>Ações</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for dado in dados %}
+                  <tr>
+                    <td>{{ dado.placa }}</td>
+                    <td>{{ dado.marca }}</td>
+                    <td>{{ dado.modelo }}</td>
+                    <td>{{ dado.cor }}</td>
+                    <td>{{ dado.locacao }}</td>
+                    <td>{{ dado.disponivel | yesno }}</td>
+                    <td>{{ dado.vaga.endereco.cep | default_if_none:' ' }}</td>
+                    <td>{{ dado.vaga.id | default_if_none:' ' }}</td>
+                    <td>
+                        <a href="{% url 'url_altera_carro' dado.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="btn btn-secondary-blue btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a  href="{% url 'url_exclui_carro' dado.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                  </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
 
 {% endblock %}

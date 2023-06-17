@@ -6,11 +6,27 @@
 {% endblock %}
 
 {% block main %}
-    <h3>Voce tem certeza que deseja excluir{{ txt_info }}</h3>
-
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Sim, estou certo disso!</button>
-        <button type="button" onclick="window.location.href='{{txt_url}}'">Não</button>
-    </form>
+    <div class="bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12 col-lg-6 mb-5">
+                    <form method="POST" class="p-5 bg-white">
+                        {% csrf_token %}
+                        <h2 class="mb-4 text-black">Confirmação de Exclusão</h2>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <h5 class="text-danger">Voce tem certeza que deseja excluir: <b class="text-dark">{{ txt_info.upper }}</b></h5>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-secondary-blue  py-2 px-4 rounded-0">Sim, estou certo disso!</button>
+                                <button type="button" class="btn btn-primary  py-2 px-4 rounded-0" onclick="window.location.href='{{txt_url}}'">Não</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
