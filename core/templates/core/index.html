@@ -42,7 +42,7 @@
                                            data-carro-placa="{{ carro.placa }}" data-carro-marca="{{ carro.marca }}"
                                            data-carro-modelo="{{ carro.modelo }}" data-carro-cor="{{ carro.cor }}"
                                            data-carro-rua="{{ carro.vaga.endereco.rua }}" data-carro-bairro="{{ carro.vaga.endereco.bairro }}"
-                                           data-carro-cidade="{{ carro.vaga.endereco.cidade }}" data-carro-vaga="{{ carro.vaga.nome }}"
+                                           data-carro-cidade="{{ carro.vaga.endereco.cidade }}" data-carro-vaga="{{ carro.vaga.id }}"
                                            data-carro-locacao="{{ carro.locacao }}"
                                            data-bs-toggle="modal" data-bs-target="#modalDetalhesCarro">Ver mais</button></p>
                                 <p><a href="{% url 'url_carro_reserva' carro.id %}" class="btn btn-secondary-blue mr-1 py-2 px-4 rounded-0">Reservar</a></p>

@@ -75,7 +75,16 @@
                                         Listagens
                                     </a>
                                     <ul class="dropdown  arrow-top">
-                                        <li><a href="#">Usuários</a></li>
+                                        <li class="has-children">
+                                            <a href="#">
+                                                Usuários
+                                            </a>
+                                            <ul class="dropdown">
+                                                <li><a href="{% url 'url_listagem_clientes' %}">Clientes</a></li>
+                                                <li><a href="{% url 'url_listagem_prestadores' %}">Prestadores</a></li>
+                                                <li><a href="{% url 'url_listagem_administradores' %}">Administradores</a></li>
+                                            </ul>
+                                        </li>
                                         <li><a href="{% url 'url_listagem_carros' %}">Carros</a></li>
                                         <li class="has-children">
                                             <a href="#">

@@ -7,33 +7,57 @@
 
 {% block main %}
 
-    <ul class="list-group">
-        {% for i in dados %}
-            {% if i.isActive == True %}
-                <li class="list-group-item">
-                    id: {{ i.id }} <br>
-                    Nome: {{ i.nome }} <br>
-                    Email: {{ i.user.email }} <br>
-                    Identificacao: {{ i.identificacao }} <br>
-                    Telefone: {{ i.telefone }} <br>
-                    Rua: {{ i.endereco.rua }}, {{ i.endereco.numero }} <br>
-                    Bairro: {{ i.endereco.bairro }}<br>
-                    Cidade: {{ i.endereco.cidade }} <br>
-                    CEP: {{ i.endereco.cep }} <br>
-                    Matricula: {{ i.matricula }} <br>
-                    Cargo: {{ i.cargo }} <br>
-
-                    <br>
-                    <a href="{% url 'url_altera_administrador' i.id %}">Editar</a>
-                    <a href="{% url 'url_exclui_administrador' i.id %}">Excluir</a>
-                </li>
-            {% endif %}
-
-        {% empty %}
-            Não há administradores cadastrados.
-        {% endfor %}
-    </ul>
-
-    <button onclick="window.location.href='/'">Home</button>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+        <div class="col-md-10">
+            <table class="table table-bordered table-hover tabela-cadastro">
+              <thead>
+              <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Identificacao</th>
+                <th>Telefone</th>
+                <th>Rua</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th>Cep</th>
+                <th>Matricula</th>
+                <th>Cargo</th>
+                <th>Ações</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for dado in dados %}
+                  <tr>
+                    <td>{{ dado.nome | default_if_none:'' }}</td>
+                    <td>{{ dado.email | default_if_none:'' }}</td>
+                    <td>{{ dado.identificacao | default_if_none:'' }}</td>
+                    <td>{{ dado.telefone | default_if_none:'' }}</td>
+                    <td>{{ dado.endereco.rua | default_if_none:'' }}</td>
+                    <td>{{ dado.endereco.bairro | default_if_none:'' }}</td>
+                    <td>{{ dado.endereco.cidade | default_if_none:'' }}</td>
+                    <td>{{ dado.endereco.cep | default_if_none:'' }}</td>
+                    <td>{{ dado.matricula | default_if_none:'' }}</td>
+                    <td>{{ dado.cargo | default_if_none:'' }}</td>
+                    <td class="d-flex">
+                        <a href="{% url 'url_altera_administrador' dado.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="btn btn-secondary-blue mx-1 btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a  href="{% url 'url_exclui_administrador' dado.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir" class="btn btn-danger mx-1 btn-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                  </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
 
 {% endblock %}
