@@ -60,10 +60,6 @@
                 var carroVaga = $(this).data('carro-vaga');
                 var carroLocacao = $(this).data('carro-locacao');
 
-                // Aqui você pode fazer uma requisição AJAX para buscar as informações do carro com o ID fornecido
-
-                // Preencher o modal com as informações do carro recuperadas
-                // Exemplo de código para exibir o modal e preencher os elementos HTML
                 $('#modalDetalhesCarro .modal-title').text(carroMarca.toUpperCase() + ' ' + carroModelo.toUpperCase());
                 $('#modalDetalhesCarro .modal-body #label-placa-carro').text(carroPlaca.toUpperCase())
                 $('#modalDetalhesCarro .modal-body #label-marca-carro').text(carroMarca.toUpperCase())
@@ -74,9 +70,6 @@
                 $('#modalDetalhesCarro .modal-body #label-cidade-carro').text(carroCidade.toUpperCase())
                 $('#modalDetalhesCarro .modal-body #label-vaga-carro').text(carroVaga.toUpperCase())
                 $('#modalDetalhesCarro .modal-body #label-locacao-carro').text('R$' + carroLocacao.toUpperCase())
-
-                // Abrir o modal
-                $('#carro-modal').modal('show');
             });
         });
 

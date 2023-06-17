@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
 
 {% block extrahead %}
     {{ form.media }}
@@ -10,14 +11,34 @@
 {% endblock %}
 
 {% block main %}
+    <div class=" bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12 col-lg-6 mb-5">
+                    <form method="POST" enctype="multipart/form-data" class="p-5 bg-white">
+                        {% csrf_token %}
+                        <h2 class="mb-4 text-black">Sign in</h2>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                {{ form.username | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                {{ form.password | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-secondary-blue  py-2 px-4 rounded-0">Login</button>
+                                <button class="btn btn-primary  py-2 px-4 rounded-0" onclick="window.location.href='/'">Cancelar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h3>{{ txt_descricao }}</h3>
-
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form | crispy }}
-            <button type="submit">Salvar</button>
-        </form>
-    <button onclick="window.location.href='/'">Cancelar</button>
 
 {% endblock %}
