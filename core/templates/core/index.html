@@ -37,7 +37,10 @@
                             <img src="{% static 'img/carro.png' %}" alt="Image" class="img-fluid">
                             <h3 class="h4 text-black">{{ carro.marca }} {{ carro.modelo }}</h3>
                             <p class="mb-4 text-gray-500">R${{ carro.locacao }}/dia</p>
-                            <p><a href="#" class="btn btn-primary py-2 px-4 rounded-0">Ver mais</a></p>
+                            <div class="d-flex justify-content-center">
+                                <p><button class="btn btn-primary me-1 py-2 px-4 rounded-0" type="button" data-bs-toggle="modal" data-bs-target="#modalDetalhesCarro">Ver mais</button></p>
+                                <p><a href="{% url 'url_carro_reserva' carro.id %}" class="btn btn-secondary-blue mr-1 py-2 px-4 rounded-0">Reservar</a></p>
+                            </div>
                         </div>
                     </div>
                 {% endif %}

@@ -22,7 +22,15 @@
                             <li class="active">
                                 <a href="{% url 'url_principal' %}">Home</a>
                             </li>
-                            <li><a href="#">Minhas Reservas</a></li>
+                            <li class="has-children">
+                                <a href="#">
+                                    Minhas Reservas
+                                </a>
+                                <ul class="dropdown  arrow-top">
+                                    <li><a href="{% url 'url_principal' %}">Nova reserva</a></li>
+                                    <li><a href="{% url 'url_usuario_listagem_reservas' %}">Minhas Reservas</a></li>
+                                </ul>
+                            </li>
                             {% if request.user|has_group:'Prestadores' or request.user|has_group:'Administradores' %}
                                 <li class="has-children">
                                     <a href="#">
@@ -86,8 +94,8 @@
                 </div>
                 <div class="col-8 col-md-8 col-lg-4 text-right">
                     {% if user.get_username %}
-                        <a href="/admin/" class="btn btn-primary rounded-0 text-white py-2 px-4">Painel Admin</a>
-                        <a href="/accounts/logout/" class="btn btn-primary rounded-0 py-2 px-4">Logout</a>
+                        <a href="/admin/" class="btn btn-primary btn-outline-primary rounded-0 text-white py-2 px-4">Admin</a>
+                        <a href="/accounts/logout/" class="btn btn-primary  rounded-0 py-2 px-4">Logout</a>
                     {% else %}
                         <a href="{% url 'url_registrar_cliente' %}" class="btn btn-primary btn-outline-primary rounded-0 text-white py-2 px-4">Register</a>
                         <a href="/accounts/login/" class="btn btn-primary btn-primary rounded-0 py-2 px-4">Login</a>
