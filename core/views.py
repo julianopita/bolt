@@ -17,8 +17,18 @@ User = get_user_model()
 
 
 def home(request):
-    contexto = {'home': 'home'}
-    return render(request, 'core\index.html', contexto)
+    if request.POST and request.POST['input_pesquisa'] and request.POST['input_pesquisa'] != 'None':
+        cidade_selecionada = request.POST['input_pesquisa']
+        return redirect('url_carros_disponiveis', cidade_selecionada)
+    else:
+        cidade_selecionada = 'None'
+
+    carros = Carro.objects.filter(disponivel=True)
+
+    cidades = set(Vaga.objects.prefetch_related().all().values_list('endereco__cidade'))
+
+    contexto = {'home': 'home', 'carros': carros, 'cidades': cidades, 'cidade_selecionada': cidade_selecionada}
+    return render(request, 'core/index.html', contexto)
 
 
 # Controle de acesso
@@ -55,7 +65,7 @@ def cadastroEndereco(request):
         form.save()
         return redirect('url_principal')
     contexto = {'form': form, 'txt_titulo': 'Cadastro Endereço', 'txt_descricao': 'Cadastro de Endereço'}
-    return render(request, 'core\cadastro.html', contexto)
+    return render(request, 'core/cadastro.html', contexto)
 
 
 @login_required
@@ -596,7 +606,7 @@ def excluiEventoCarro(request, id):
 
 # Casos funcionais - 001
 
-def CarrosDisponiveis(request):
+def CarrosDisponiveis(request, regiao):
     # Na implementacao real recebe latitude e longitude do usuário em formato de dicionário
     # Usuário indica na interface 001 a região onde quer ver
     # A partir do endereço ou do clique no mapa, a funcao recupera latitude e longitude - não implementado:
@@ -607,12 +617,23 @@ def CarrosDisponiveis(request):
     # No exemplo vamos substituir por duas cidades hardcoded. Utilizar latitude e longitude demanda alterações no banco de dados
 
     # carros_prox = carros.objects.filter(vaga__coordinates__distance_lte=(locale, D(km=4)))
+    if request.POST and request.POST['input_pesquisa'] == 'None':
+        return redirect('url_principal')
+
     if request.POST and request.POST['input_pesquisa']:
-        dados = Carro.objects.filter(vaga__endereco__cidade__icontains=request.POST['input_pesquisa'])
+        cidade_selecionada = request.POST['input_pesquisa']
+        return redirect('url_carros_disponiveis', cidade_selecionada)
+    elif request.POST and request.POST['input_pesquisa'] != 'None':
+        cidade_selecionada = request.POST['input_pesquisa']
+        carros = Carro.objects.filter(vaga__endereco__cidade=cidade_selecionada)
     else:
-        dados = {}
-    contexto = {'dados': dados, 'text_input': 'Digite a região onde quer procurar carros'}
-    return render(request, 'core/carros_disponiveis.html', contexto)
+        cidade_selecionada = regiao
+        carros = Carro.objects.filter(vaga__endereco__cidade=cidade_selecionada)
+
+    cidades = set(Vaga.objects.prefetch_related().all().values_list('endereco__cidade'))
+    contexto = {'carros': carros, 'cidades': cidades, 'cidade_selecionada': cidade_selecionada,
+                'text_input': 'Digite a região onde quer procurar carros'}
+    return render(request, 'core/index.html', contexto)
 
 
 @login_required

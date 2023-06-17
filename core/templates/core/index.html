@@ -6,7 +6,42 @@
 {% endblock %}
 
 {% block main %}
-    <a href="{% url 'url_carros_disponiveis' %}">Procurar carros</a>
-
-
+    <div class="container">
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-md-6" data-aos="fade">
+                <h2>Indique um ponto de retirada</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="input-group mb-3 bg-warning">
+                        <select class="form-control" name="input_pesquisa" id="input_pesquisa">
+                            <option value="None">Todas Regiões</option>
+                            {% for cidade in cidades %}
+                                <option value="{{ cidade | first }}">{{ cidade | first }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-primary h-100" type="submit"
+                               id="pesquisar-carros-disponiveis"
+                               style="border-radius: 0 5px 5px 0">Pesquisar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <hr>
+        <div class="row hosting">
+            {% for carro in carros %}
+                {% if carro.disponivel == True %}
+                    <div class="col-md-6 col-lg-4 mb-5 mb-lg-1" data-aos="fade" data-aos-delay="50">
+                        <div class="unit-2 text-center border py-3 h-100 bg-white">
+                            <img src="{% static 'img/carro.png' %}" alt="Image" class="img-fluid">
+                            <h3 class="h4 text-black">{{ carro.marca }} {{ carro.modelo }}</h3>
+                            <p class="mb-4 text-gray-500">R${{ carro.locacao }}/dia</p>
+                            <p><a href="#" class="btn btn-primary py-2 px-4 rounded-0">Ver mais</a></p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

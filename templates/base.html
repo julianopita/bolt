@@ -1,170 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% load static %}
     {% load template_extras %}
-    {% block extrahead %}
-    {% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
 </head>
-
-<body>
-<div class="container-fluid pt-1 pl-2">
-    <div class="row bg-dark">
-        <div class="col-12">
-            <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-                <!-- Brand -->
-                <a class="navbar-brand" href="/">Home</a>
-                <!-- Toggler/collapsibe Button -->
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse row w-100" id="collapsibleNavbar">
-                    <div class="col-6">
-                        <!-- Links -->
-                        <ul class="navbar-nav">
-                            <!-- Dropdown -->
-                            {% if request.user|has_group:'Administradores' %}
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                                        Pessoas
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/accounts/registrarCliente/">Cadastro Cliente</a>
-                                        <a class="dropdown-item" href="/accounts/listagemClientes/">Listagem Cliente</a>
-                                        <a class="dropdown-item" href="/accounts/registrarPrestador/">Cadastro
-                                            Prestador</a>
-                                        <a class="dropdown-item" href="/accounts/listagemPrestadores/">Listagem
-                                            Prestador</a>
-                                        <a class="dropdown-item" href="/accounts/registrarAdministrador/">Cadastro
-                                            Administrador</a>
-                                        <a class="dropdown-item" href="/accounts/listagemAdministradores/">Listagem
-                                            Administrador</a>
-                                    </div>
-                                </li>
-
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
-                                       data-toggle="dropdown">
-                                        Endereço
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/cadastroEndereco/">Cadastro</a>
-                                        <a class="dropdown-item" href="/listagemEnderecos/">Listagem</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
-                                       data-toggle="dropdown">
-                                        Vaga
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/cadastroVaga/">Cadastro</a>
-                                        <a class="dropdown-item" href="/listagemVagas/">Listagem</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
-                                       data-toggle="dropdown">
-                                        Pontos de apoio
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/cadastroPonto/">Cadastro</a>
-                                        <a class="dropdown-item" href="/listagemPontos/">Listagem</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
-                                       data-toggle="dropdown">
-                                        Carros
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/cadastroCarro/">Cadastro</a>
-                                        <a class="dropdown-item" href="/listagemCarros/">Listagem</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
-                                       data-toggle="dropdown">
-                                        Reservas
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/cadastroReserva/">Cadastro</a>
-                                        <a class="dropdown-item" href="/listagemReservas/">Listagem</a>
-                                    </div>
-                                </li>
-                            {% endif %}
-                            {% if request.user|has_group:'Prestadores' or request.user|has_group:'Administradores' %}
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
-                                       data-toggle="dropdown">
-                                        Eventos
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/cadastroEvento/">Cadastro</a>
-                                        <a class="dropdown-item" href="/listagemEventos/">Listagem</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
-                                       data-toggle="dropdown">
-                                        Eventos com carros
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/cadastroEventoCarro/">Cadastro</a>
-                                        <a class="dropdown-item" href="/listagemEventoCarros/">Listagem</a>
-                                    </div>
-                                </li>
-                            {% endif %}
-                            {% if request.user|has_group:'Clientes' %}
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1"
-                                       data-toggle="dropdown">
-                                        Minhas reservas
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/CarrosDisponiveis/">Fazer nova reserva</a>
-                                        <a class="dropdown-item" href="/usuarioListagemReservas/">Ver minhas reservas</a>
-                                        <a class="dropdown-item" href="/listagemMeusDados/">Ver meus dados</a>
-                                    </div>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                    <!--Pesquisa-->
-                    <div class="col">
-                        {% if listagem %}
-                            <form class="form-inline" method="post">
-                                {% csrf_token %}
-                                <input class="form-control mr-sm-2" type="text" placeholder="{{ text_input }}"
-                                       name="input_pesquisa">
-                                <button class="btn btn-success" type="submit">Pesquisa</button>
-                            </form>
-                        {% endif %}
-                    </div>
-
-
-                    <div class="col text-white d-flex justify-content-center align-items-center">
-                        {% if user.get_username %}
-                            Bem vindo(a) {{ user.get_username }}
-                            <a href="/admin/">Admin</a>|
-                            <a href="/accounts/logout/">Logout</a>
-                        {% else %}
-                            Usuário(a) não autenticado(a)
-                            <a href="/accounts/login">Login</a> |
-                            <a href="/accounts/registrar/">Registrar</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </nav>
-        </div>
+<body data-aos-easing="slide" data-aos-duration="800" data-aos-delay="0">
+    <div class="site-wrap">
+        {% include 'nav.html' %}
+        <!------------------------ Main ------------------------>
+        <section class="site-section bg-light">
+            {% block main %}{% endblock %}
+        </section>
     </div>
-    {% block main %}
-    {% endblock %}
-</div>
+
+    <!------------------------ Scripts ------------------------>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-migrate@3.4.1/dist/jquery-migrate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>#}
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>#}
+    <script src="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/owl.carousel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.stellar@0.6.2/jquery.stellar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.js"></script>
+    <script src=" {% static 'js/bootstrap.min.js' %}"></script>
+    <script>
+         $(function () {
+            $('#input_pesquisa').val('{{ cidade_selecionada }}')
+        });
+    </script>
+    <script src=" {% static 'js/main.js' %}"></script>
 </body>
 </html>

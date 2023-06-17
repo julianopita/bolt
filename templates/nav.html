@@ -1,0 +1,94 @@
+{% load template_extras %}
+<div class="site-mobile-menu">
+    <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+            <i class="fa-solid fa-xmark js-menu-toggle"></i>
+        </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+</div>
+<div class="site-navbar-wrap bg-white">
+    <div class="site-navbar bg-nav-top">
+        <div class="container py-1">
+            <div class="row align-items-center">
+                <div class="col-4 col-md-4 col-lg-8">
+                    <nav class="site-navigation text-left" role="navigation">
+                        <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3">
+                            <a href="" class="site-menu-toggle js-menu-toggle text-white">
+                                <i class="fa-solid fa-bars fa-xl"></i>
+                            </a>
+                        </div>
+                        <ul class="site-menu js-clone-nav d-none d-lg-block">
+                            <li class="active">
+                                <a href="{% url 'url_principal' %}">Home</a>
+                            </li>
+                            <li><a href="#">Minhas Reservas</a></li>
+                            {% if request.user|has_group:'Prestadores' or request.user|has_group:'Administradores' %}
+                                <li class="has-children">
+                                    <a href="#">
+                                        Cadastro
+                                    </a>
+                                    <ul class="dropdown arrow-top">
+                                        <li class="has-children">
+                                            <a href="#">
+                                                Usuários
+                                            </a>
+                                            <ul class="dropdown">
+                                                <li><a href="{% url 'url_registrar_cliente' %}">Cliente</a></li>
+                                                <li><a href="{% url 'url_registrar_prestador' %}">Prestador</a></li>
+                                                <li><a href="{% url 'url_registrar_administrador' %}">Administrador</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-children">
+                                            <a href="#">
+                                                Pontos <i class="fa-solid fa-chevron-right fa-2xs"></i>
+                                            </a>
+                                            <ul class="dropdown">
+                                                <li><a href="{% url 'url_cadastro_endereco' %}">Endereços</a></li>
+                                                <li><a href="{% url 'url_cadastro_vaga' %}">Vagas</a></li>
+                                                <li><a href="{% url 'url_cadastro_ponto' %}">Pontos de apoio</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-children">
+                                            <a href="#">
+                                                Carros <i class="fa-solid fa-chevron-right fa-2xs"></i>
+                                            </a>
+                                            <ul class="dropdown">
+                                                <li><a href="{% url 'url_cadastro_carro' %}">Carro</a></li>
+                                                <li><a href="{% url 'url_cadastro_evento_carro' %}">Eventos com carros</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="{% url 'url_cadastro_evento' %}">Eventos</a></li>
+                                        <li><a href="{% url 'url_cadastro_reserva' %}">Reservas</a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-children">
+                                    <a href="#">
+                                        Listagens
+                                    </a>
+                                    <ul class="dropdown  arrow-top">
+                                        <li><a href="#">Usuários</a></li>
+                                        <li class="has-children">
+                                            <a href="#">
+                                                Pontos
+                                            </a>
+                                            <ul class="dropdown">
+                                                <li><a href="{% url 'url_listagem_vagas' %}">Vagas</a></li>
+                                                <li><a href="{% url 'url_listagem_pontos' %}">Pontos de Apoio</a></li>
+                                                <li><a href="{% url 'url_listagem_enderecos' %}">Endereços</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-8 col-md-8 col-lg-4 text-right">
+                    <a href="{% url 'url_registrar_cliente' %}" class="btn btn-primary btn-outline-primary rounded-0 text-white py-2 px-4">Register</a>
+                    <a href="#" class="btn btn-primary btn-primary rounded-0 py-2 px-4">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
