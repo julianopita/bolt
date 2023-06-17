@@ -124,7 +124,8 @@ def registroCliente(request):
         usr.groups.add(user_group)
         return redirect('url_principal')
     contexto = {'user_form': user_form, 'endereco_form': endereco_form, 'pessoa_form': pessoa_form,
-                'txt_titulo': 'Cadastro Cliente', 'txt_descricao': 'Cadastro do Cliente'}
+                'txt_titulo': 'Cadastro Cliente', 'txt_descricao': 'Cadastro do Cliente',
+                'grupo': 'Cliente'}
     return render(request, 'registration/registrar.html', contexto)
 
 
@@ -186,7 +187,8 @@ def registroPrestador(request):
         usr.groups.add(user_group)
         return redirect('url_principal')
     contexto = {'user_form': user_form, 'endereco_form': endereco_form, 'pessoa_form': pessoa_form,
-                'txt_titulo': 'Cadastro Prestador', 'txt_descricao': 'Cadastro do Prestador de Serviços'}
+                'txt_titulo': 'Cadastro Prestador', 'txt_descricao': 'Cadastro do Prestador de Serviços',
+                'grupo': 'Prestador'}
     return render(request, 'registration/registrar.html', contexto)
 
 
@@ -247,7 +249,8 @@ def registroAdministrador(request):
         usr.groups.add(user_group)
         return redirect('url_principal')
     contexto = {'user_form': user_form, 'endereco_form': endereco_form, 'pessoa_form': pessoa_form,
-                'txt_titulo': 'Cadastro Administrador', 'txt_descricao': 'Cadastro do Administrador'}
+                'txt_titulo': 'Cadastro Administrador', 'txt_descricao': 'Cadastro do Administrador',
+                'grupo': 'Administrador'}
     return render(request, 'registration/registrar.html', contexto)
 
 
