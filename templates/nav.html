@@ -85,7 +85,17 @@
                                                 <li><a href="{% url 'url_listagem_administradores' %}">Administradores</a></li>
                                             </ul>
                                         </li>
-                                        <li><a href="{% url 'url_listagem_carros' %}">Carros</a></li>
+                                        <li class="has-children">
+                                            <a href="#">
+                                                Carros
+                                            </a>
+                                            <ul class="dropdown">
+                                                <li><a href="{% url 'url_listagem_carros' %}">Carros</a></li>
+                                                <li><a href="{% url 'url_listagem_evento_carros' %}">Eventos com Carros</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="{% url 'url_listagem_eventos' %}">Eventos</a></li>
+                                        <li><a href="{% url 'url_listagem_reservas' %}">Reservas</a></li>
                                         <li class="has-children">
                                             <a href="#">
                                                 Pontos

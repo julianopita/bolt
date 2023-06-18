@@ -25,7 +25,6 @@
                 <div class="row justify-content-center">
                     <div class="col-md-12 col-lg-10 mb-5">
                         <div class="p-5 bg-white">
-{#                            <h2 class="mb-4 text-black">Pessoa</h2>#}
                             <div class="row form-group">
                                 <div class="col-md-12 mb-3 mb-md-0">
                                     {{ form | crispy }}
@@ -34,7 +33,7 @@
                             <div class="row form-group">
                                 <div class="col-md-12">
                                     <input type="submit" value="Register" class="btn btn-secondary-blue  py-2 px-4 rounded-0">
-                                    <input type="button" value="Cancelar" class="btn btn-primary  py-2 px-4 rounded-0" onclick="window.location.href='/'">
+                                    <input type="button" value="Cancelar" class="btn btn-primary  py-2 px-4 rounded-0" onclick="window.history.back()">
                                 </div>
                             </div>
                         </div>
