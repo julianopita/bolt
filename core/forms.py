@@ -1,5 +1,5 @@
 from django import forms
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import ModelForm
@@ -62,6 +62,10 @@ class FormCliente(ModelForm):
         model = Cliente
         fields = ['nome', 'identificacao', 'telefone', 'dataNascimento']
 
+        widgets = {
+            'dataNascimento': DatePickerInput(options={'format': 'DD/MM/YYYY'}),
+        }
+
 
 class FormPontoDeApoio(ModelForm):
     class Meta:
@@ -73,11 +77,6 @@ class FormReserva(ModelForm):
     class Meta:
         model = Reserva
         fields = ['dataInicio', 'dataFim', 'carro']
-
-        widgets = {
-            'dataInicio': DateTimePickerInput(options={'format': 'DD/MM/YYYY hh:mm:ss'}),
-            'dataFim': DateTimePickerInput(options={'format': 'DD/MM/YYYY hh:mm:ss'}),
-        }
 
 
 class FormEvento(ModelForm):
@@ -96,3 +95,8 @@ class FormCarroReserva(ModelForm):
     class Meta:
         model = Reserva
         fields = ('dataInicio', 'dataFim')
+
+        widgets = {
+            'dataInicio': DateTimePickerInput(options={'format': 'DD/MM/YYYY hh:mm:ss'}),
+            'dataFim': DateTimePickerInput(options={'format': 'DD/MM/YYYY hh:mm:ss'}),
+        }
