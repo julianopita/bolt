@@ -72,6 +72,10 @@
                 $('#modalDetalhesCarro .modal-body #label-cidade-carro').text(carroCidade.toUpperCase())
                 $('#modalDetalhesCarro .modal-body #label-vaga-carro').text(carroVaga.toUpperCase())
                 $('#modalDetalhesCarro .modal-body #label-locacao-carro').text('R$' + carroLocacao.toUpperCase())
+
+                // Abrir o modal
+                $('#modalDetalhesCarro').modal('show');
+
             });
 
             $('.tabela-cadastro').DataTable({

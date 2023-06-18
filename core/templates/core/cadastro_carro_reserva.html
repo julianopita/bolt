@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
 
 {% block extrahead %}
     {{ form.media }}
@@ -11,22 +12,28 @@
 
 {% block main %}
 
-    <h3>{{ txt_descricao }}</h3>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
+            <h3>{{ txt_descricao }}</h3>
 
-            <li class="list-group-item">
-                <h4>Carro id: {{ dados.id }} </h4>
-                Placa: {{ dados.placa }} <br>
-                Marca: {{ dados.marca }} <br>
-                Modelo: {{ dados.modelo }} <br>
-                Cor: {{ dados.cor }} <br>
-                Valor da locação: {{ dados.locacao }} <br>
-        <button type="submit">Salvar</button>
-    <button onclick="window.location.href='/'">Cancelar</button>
-        </form>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form | crispy }}
+
+                <li class="list-group-item">
+                    <h4>Carro id: {{ dados.id }} </h4>
+                    Placa: {{ dados.placa }} <br>
+                    Marca: {{ dados.marca }} <br>
+                    Modelo: {{ dados.modelo }} <br>
+                    Cor: {{ dados.cor }} <br>
+                    Valor da locação: {{ dados.locacao }} <br>
+                <button type="submit">Salvar</button>
+                <button onclick="window.location.href='/'">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
 
 
 {% endblock %}

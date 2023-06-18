@@ -1,5 +1,4 @@
 import decimal
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from core.forms import FormEndereco, FormVaga, FormCarro, FormPessoa, FormAdministrador
 from core.forms import FormPrestador, FormCliente, FormPontoDeApoio, FormReserva, FormEvento, FormEventoCarro, \
