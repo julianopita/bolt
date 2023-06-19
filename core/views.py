@@ -493,10 +493,9 @@ def alteraReserva(request, id):
 
 
 @login_required
-@user_passes_test(checkGroupAdmin)
 def excluiReserva(request, id):
     obj = Reserva.objects.get(id=id)
-    contexto = {'txt_info': obj.cliente.nome, 'txt_url': '/listagemReservas/'}
+    contexto = {'txt_info': obj.cliente.nome, 'txt_url': '/usuarioListagemReservas/'}
     if request.POST:
         obj.delete()
         contexto.update({'txt_tipo': 'listagemReservas'})
@@ -514,7 +513,7 @@ def cadastroEvento(request):
         form.save()
         return redirect('url_principal')
     contexto = {'form': form, 'txt_titulo': 'Cadastro Evento', 'txt_descricao': 'Cadastro de Eventos'}
-    return render(request, 'core\cadastro.html', contexto)
+    return render(request, 'core/cadastro.html', contexto)
 
 
 @login_required
@@ -565,7 +564,7 @@ def cadastroEventoCarro(request):
         form.save()
         return redirect('url_principal')
     contexto = {'form': form, 'txt_titulo': 'Cadastro EventoCarro', 'txt_descricao': 'Cadastro de Eventos com Carros'}
-    return render(request, 'core\cadastro.html', contexto)
+    return render(request, 'core/cadastro.html', contexto)
 
 
 @login_required
